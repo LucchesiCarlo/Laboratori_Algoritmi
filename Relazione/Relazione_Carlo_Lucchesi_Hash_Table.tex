@@ -1,0 +1,400 @@
+\documentclass{article}
+\usepackage{graphicx} %Package del LaTex utile per importare immagini nei documenti.
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{fancyhdr}
+\usepackage{imakeidx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{float}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={Overleaf Example},
+    pdfpagemode=FullScreen,
+    }
+\graphicspath{{Immagini/}} %Indica la cartella in cui si trovano le immagini.
+
+\renewcommand{\contentsname}{Indice}
+
+\renewcommand{\listfigurename}{Lista delle Immagini}
+\renewcommand{\listtablename}{Lista delle Tabelle}
+
+\makeindex
+
+\newcommand{\bigO}{\emph{O}}
+
+\newcommand{\image}[3][1]{
+	\centering
+	\includegraphics[width = #1\textwidth]{#2}
+	\caption{#3}
+}
+
+
+
+\thispagestyle{empty}
+
+\newlength{\spacing}
+\setlength{\spacing}{\baselineskip}
+\begin{document}
+%\maketitle
+\begin{titlepage}
+\newgeometry{top = 2.25 cm}
+\centering \Huge{\textsl{Confronto di diverse implementazioni di Hash ad Indirizzamento Aperto}}
+\vspace{\spacing}
+\hrule
+\vspace{\spacing}
+
+\includegraphics[width = \textwidth]{Unifi}
+\hrule
+\vspace{\spacing}
+\huge{Corso di Ingegneria Informatica}
+\break
+\LARGE{Dipartimento di Ingegneria dell'Informazione}
+\vspace{\spacing}
+\hrule
+
+\vfill
+\raggedright{{\large Autore: Carlo Lucchesi}}
+\break
+\raggedright{{\large Matricola: 7073136}}
+\break
+\raggedright{{\large Disciplina: Laboratorio di Algoritmi e Strutture Dati}}
+\break
+\raggedright{{\large Docente di riferimento: Simone Marinai}}
+
+\end{titlepage}
+
+\newpage
+
+\pagenumbering{Roman}
+\tableofcontents
+
+\newpage
+
+\pagenumbering{arabic}
+\pagestyle{fancy}
+\fancyhead[L]{Carlo Lucchesi}
+\fancyhead[C]{}
+\fancyhead[R]{\includegraphics[height = 1.5\baselineskip]{Unifi_Logo}}
+\fancyfoot[L, C]{}
+\fancyfoot[R]{\thepage}
+
+%\addtolength{\headwidth}{\marginparsep}
+%\addtolength{\headwidth}{\marginparwidth}
+\section{Introduzione}
+
+Con questa relazione si descrivono l'approccio e i risultati sperimentali della prima esercitazione del Laboratorio di Algoritmi proposta. Questa avverrà medante la scrittura in codice \textbf{Python} delle strutture dati, insieme agli algoritmi per il loro utilizzo, richieste.
+\subsection{Richiesta dell'Esercizio}
+
+Implementare, in lunguaggio \emph{Python}, una tabella hash con indirizzamento aperto che supporti i seguenti metodi di esplorazione:
+\begin{itemize}
+\item Eplorazione lineare (con coefficenti naturali $\neq 0$ qualsiasi).
+\item Eplorazione quadratica.
+\item Esplorazione con hash doppio.
+\end{itemize}
+Eseguire una serie di esperimenti, che consistono nella misurazione del tempo di esecuzione (sempre mediante l'utilizzo di librerie del \emph{Python}) in diversi scenari dei vari metodi implementati, per verificare i risultati teorici appresi durante il corso di \textbf{Algoritmi e Strutture Dati}.
+Infine redigere una relazione in cui si confrontano i risultati delle verie implementazioni, accompagnata da un opportuno commento per verificare se si riscontrano nell'esperimento pratico i risultati teorici.
+
+\subsection{Piattaforma di Esecuzione dei Test}
+
+Per poter comprendere effettivamente a pieno i risultati, ed eventualemnte confrontarli con altri, è necessario conoscere la \textbf{Piattaforma Hardware} e \textbf{Software} su cui sono stati eseguiti i test.
+\subsubsection{Piattaforma hardware}
+
+Tutto il codice che è stato scritto per questi eperimenti è stato prodotto sulla stessa piattaforma su cui è stato testato. L'hardware utilizzato si tratta di un laptop: questo comporta una ridotta capacità di calcolo rispetto a calcolatori desktop o risorse di calcolo remoto (Ad esempio il \textbf{Cloud Computing}).
+Le specifiche hardware di interesse, ovvero quelle che hanno un impatto maggiore sui risultati ottenuti, sono:
+\begin{itemize}
+\item \textbf{CPU:} ARM A9 con frequenza massima pari a 3,6 GHz
+\item \textbf{Scheda Madre:} AsusTek Computer INC X555BP, chipset AMD.
+\item \textbf{RAM:} 8GB DDR4-SDRAM
+\item \textbf{GPU:} RADEON R5 M420 con 2GB di memoria.
+\item \textbf{Disco:} HDD da 1TB (Partizionato: l'ambiente software ha a disposizione solo 200 GB circa).
+\end{itemize} 
+Bisogna tenere in considerazione che durante l'esecuzione dei test il laptop è rimasto attaccato all'alimentazione.
+\subsubsection{Piattaforma software}
+
+Per quanto riguarda la piattaforma software gli aspetti più importanti da tenere in considerazione sono:
+\begin{itemize}
+\item \textbf{Python:} La versione di Python che è stata utilizzata per lo sviluppo ed esecuzione del codice è la 3.10.6.
+\item \textbf{Sistema Operativo:} Il sistema operativo su cui sono stati eseguiti i test è Kubuntu verisone 22.04
+\begin{itemize}
+\item \textbf{Ambiente Grafico:} KDE plasma 5.29.7.
+\end{itemize}
+\item \textbf{IDE:} L'IDE utilizato è \textbf{Visual Studio Code} alla versione 1.76.1.
+\end{itemize}
+\'E necessario specificare l'IDE utilizzato per lo sviluppo del codice in quanto l'esecuzione dei test è avvenuta dal suo ambiente, e quindi durante i test l'IDE è rimasto in esecuzione. 
+\section{Riferimenti Teorici}
+
+In questa sezione si introducono i concetti teorici riguardanti le strutture dati (e gli algoritmi a loro associati) fondamentali per poter stabilire la coerenza dei risultati pratici con quelli teorici. 
+\subsection{Concetto di Stima Asintotica del Costo}
+
+Con concetto di \textbf{Stima Asintotica  del Costo Asintotico} di un algoritmo si intende: \emph{una stima dell'andamento del tempoche l'algoritmo richiede per risolvere il suo \textbf{problema computazionele}. Questa stima è definita da una classe di funzioni (che soddisfano certe proprietà) i cui argomenti sono la dimensione dell'ingresso del problema.}
+Con il termine \emph{dimensione degli input} si può intendere sia la quantità di informazioni che l'input occupa, sia il numero di elementi che lo compongono. Genericamente si fa riferimento al secondo metodo di calcolo. Per quanto riguarda il nostro contesto l'argomento della nostra stima asintotica di costo è il \emph{fattore di caricamento} (che introdurremo nella sezione successiva).
+\subsection{Tabella Hash}
+
+La \textbf{Tabella Hash} è una struttra dati per l'implementazione dei \emph{Dizionario}. Il dizionario è una struttura dati "\emph{astratta}" utilizzata per la rappresentazione degli insiemi (in questo caso senza la presenza di multipli), dove ad ogni elemento dell'insieme è associato ad una chiave univoca che lo identifica nella struttura dati. Lo scopo di questa struttura dati è quello di offrire inserimento e ricerca molto efficenti (con obbiettivo di costo \bigO(1)) 
+
+La tabella hash è composta costituida da un vettore di memoria su cui andaranno salvati gli elementi che compongono l'insieme. Per stabilire il punto i cui gli elementi dovrano essere inseriti si usa un funzione particolare chiamata funzione Hash. Questa ha l'effetto di prendere in ingresso l'elemento che deve essere inserito, e da come risultato un indice "\emph{casuale}" (ma deterministico, ovvero a parità di argomento deve sempre generare lo stesso risultato) che indica la posizione in cui inserire l'elemento. Nel nostro contesto, dato che la scelta del tipo di dato è assolutamente irrilevante, le nostre tabelle hash conterranno numeri interi.
+
+Si noti che la funzione hash generando numeri scorrelati tra di loro potrebbe generare per 2 elementi la stessa chiave; questa eventualità viene chiamata \textbf{collisione}. Queste devono essere opportunamente gestite, e nel nostro caso si utilizzerà la tecnica ad \textbf{Indirizzamento Aperto}, che consiste nel scegliere un succesivo punto di inserimento finchè non si trova una cella libera (oppure si scopre che la tabella è piena). Questa richiederà una modifica della funzione hash che verrà discussa nella sezione successiva.
+
+Il parametro che deve essere tenuto in forte considerazione è il \textbf{Fattore di Caricamento} ($\alpha$) che si calcola come \emph{numero di elementi inseriti} (n) diviso \emph{numero di celle disponibili} (m): $\alpha = n / m$.
+Questo coefficente indica quanto la tabella è "carica" di elementi,che crescendo ha un impatto negativo su operazioni di ricerca ed inserimento.
+
+\subsubsection{Metodi di Esplorazione}
+Come abbiamo detto l'indirizzamento aperto necessita di una modifica della nostra funzione hash, infatti adesso dobbiamo essere capaci di fornire come argomento anche il numero di tenativi falliti, in modo che generi un numero sempre diverso dai precedenti (ma sempre deterministico). Queste versioni modificate dei questa funzione hash devono generare quella che viene chiamata \textbf{Sequenza di Esplorazione}, in quanto posso generare una sequenza di valori. L'unico vincolo a questa sequenza è che sia una permutazione di tutte le celle presenti nella tabella. Questo perchè se non fosse così si richierebbe di saltare celle che vuote.
+
+I metodi di esplorazione che andremo a verificare sono i seguenti, genrati con le rispettive funzioni:
+\begin{itemize}
+\item \textbf{Lineare:} \begin{math} h(k, i) = ((k\; mod\; m) + c \cdot i)\; mod\; m\end{math}. \emph{c} può essere qualsiasi numero naturale $\neq 0$.
+\item \textbf{Quadratico:} \begin{math} h(k, i) = ((k\; mod\; m) + c_1 \cdot i + c_2 \cdot i ^ 2)\; mod\; m\end{math}. In questo caso $c_1$ e $c_2$ non possono essere numeri qualsiasi. Questi vanno stabiliti secondo dei criteri particolari a seconda della dimensione della tabella (\label{Esplorazione_Quadratica}Wikipedia: \href{https://en.wikipedia.org/wiki/Quadratic_probing}{Quadratic Probing}).
+\item \textbf{Doppio:} \begin{math} h(k, i) = ((k\; mod\; m) + ((k\; mod\; m') + 1) \cdot i)\; mod\; m\end{math}. In questo caso $m'$ deve essere un numero minore di $m$ (genericamente $m' = m - 1$). 
+\end{itemize}
+
+\subsubsection{Costi Tabella Hash con Indirizzamento Aperto}
+Le operazioni principali che si possono eseguire su una tabella hash sono tre, ovvero quelle tipiche di un dizionario: \textbf{Ricerca}, \textbf{Inseriemento} e \textbf{Rimozione}.
+\break
+Verranno condotti dei test solamente su le prime due operazioni.
+
+La funzione di stima asintotica descritte in seguito derivano da una analisi delle operazioni dell'hash table sotto le seguenti ipotesi: la tabella hash non è piena, non sono avvenute delle cancellazioni, la funzione hash  utilizzata è uniforme (vedi Sezione \ref{Hash_Uniforme}). \hfill
+\break
+Poste queste condizioni si ottengono i seguenti costi asintotici:
+\begin{itemize}
+\item \textbf{Ricerca con Successo:} \bigO ($\frac{1}{1 - \alpha} $) per gli $\alpha \neq 1$.
+\item \textbf{Ricerca con Insuccesso:} \bigO ($\frac{1}{1 - \alpha} $) per gli $\alpha \neq 1$.
+\item \textbf{Inserimento:} \bigO ($\frac{1}{\alpha} log(\frac{1}{1 - \alpha})$) per gli $\alpha \neq 0,1$.
+
+\end{itemize}
+
+Per quanto il costo della ricerca con successo ed insuccesso siano uguali da un punto di vista asintotico questi due casi devono essere trattati separatamente da un punto di vsita teorico, e verificheremo una in che entità questi due casi differiscono.
+
+\subsection{Hash Uniforme}
+\label{Hash_Uniforme}
+Con Hash uniforma si intende una funzione hash capace di generare come sequenza di esplorazioni tutte le $m!$ possibili. Questa viene prese come riferimento nei nostri studi teorici (come per esempio la stima asintotica del costo), ma all'atto pratico sono pressochè impossibili da ottenere. Perciò faremo affidamento a funzioni hash meno performati, con il seguente numero di possibili permutazioni generate:
+\begin{itemize}
+\item \textbf{Esplorazione Lineare:} $m$ possibili permutazioni.
+\item \textbf{Esplorazione Quadratica:} $m$ possibili permutazioni.
+\item \textbf{Esplorazione con Hash Doppio:} $m^2$ possibili permutazioni.
+\end{itemize} 
+
+Vedremo come un numero ridotto di possibili permutazioni generate porti a dei problemi di performance a livello pratico.
+
+\subsection{Clustering}
+Con la parola \textbf{Clustering} si intende l'\emph{addensamento} di diversi elemetni su un numero ridotto di celle a disposizione. Questo si viene a creare poichè il numero di sequenze di esplorazione effettivamente generate si discosta sensibilimente dal valore teorico $m!$. Si possono individuare due tipi di clustering.
+
+Il Clustering \emph{Primario} si verifica quando si usa una funzione hash tale per cui, quando generano una sequenza, dal momento in cui generano lo stesso valore allora saranno uguali anche i successivi (fino alla terminazione di una delle due). Quindi in realtà una funzione hash così fatta non fa altro che generare la stessa sequenza, ma traslata di un numero di elementi. La funzione hash con esplorazione lineare è affetta da questo tipo di clustering.
+
+Invece il Clustering \emph{Secondario} si verifica quando una funzione hash tale per cui l'effetto precedentemente descritto si verifica solo quando le due esplorazioni iniziano con lo stesso numero. Ovvero due seguenze si "allineano" solo nel caso in cui inizino dallo stesso valore. La funzione hash con esplorazione quadratica è affetta da questo tipo di clustering.
+
+Dato che il clustering primario si verifica in molti più casi rispetto al secondario, è evidente che in generale l'esplorazione di tipo quadratico sarà migliore di quella lineare. Per quanto riguarda invece l'esplorazione con doppio hash questa non genera nessun tipo di clustering, e quindi può essere considerata (in generale) la migliore delle tre.
+
+\section{Documentazione del Codice}
+\subsection{Implementazione delle Strutture Dati}
+
+\subsection{Funzioni di supporto per la Sperimentazione}
+
+\section{Risultati Sperimentali}
+
+\subsection{Configurazione Preliminare}
+
+\begin{Huge}
+TODO.
+\end{Huge}
+
+Per quanto invece riguarda l'esplorazione quadratica si fornisce come dimanesione della tabella la potenza esatta del 2 più vicina alla dimensione delle altre tabelle (generato con la funzione \emph{closest\_two\_power}). Questa caratteristica non dovrebbe impattare eccessivamente sulle prestazioni di questa tabella hash, dato che i numeri inseriti sono causali (generati con la funzione \emph{random.choice} su un array di valori non ancora inseriti) e quindi non dovrebbero avere una correlazione di nessun tipo.
+
+Per ottimizzare i tempi di esecuzione di questi test si è scelto di non verificare i tempi di inserimento per ogni elemento, ma di campionarli ad in tervalli regolari. Questo da una parte ci permette di ridurre i tempi totali di esecuzione (e quindi potenzialmente lavorare con dimensioni delle tabelle più grosse), ma dall'altra parte mantiene chiaramente visibile l'andamento complessivo (a patto che l'intervallo di campionamento non sia troppo grande).
+
+Inoltre, dato che il dispositivo non è configurato per la esclusiva esecuzione degli esperimenti, è probabile che alcuni inserimenti (senza possibilità di prevedere quali) potrebbero avere tempi di esecuzione maggiori per via dell'allocazione della CPU per compiti più prioritari. Per mitigare questo effetto ogni volta che si deve ottenere una misurazione questa viene eseguita più di una volta, per poi ottenere la media di queste misurazione.
+
+Dato che talvolta gli esperimenti possono richiedere diverso tempo per poter essere terminati le funzioni hanno la possibilità di scrivere sullo standard output la percentuale di misurazioni fatte. Questo non ha un impatto sulle misurazioni (in quanto queste considerano strettamente solo le operazioni sulla tabella hash), ma ci danno la percezione dell'effettivo avanzamento degli esperimenti.
+
+Infine, tutti i grafici sarabbo presentati ponendo sull'asse delle ordinate il tempo, e su quello delle ascisse il fattore di caricamento. Quest'utlimo è stato scelto per 2 motivi: il primo è che le funzioni di costo asintotico sono espresse in funzione del fattore di caricamento, e il secondo è perchè ci permette di confrontare ipoteticamente l'andamento su tabelle hash diverse. 
+
+\subsection{Ricerca con Successo}
+
+Eseguendo il test di ricerca con successo con le funzioni precedentemente descritte sull'hash con esplorazione lineare si è ottenuto il seguente grafico (figura \ref{fig:Successo_Lineare_scala_lineare}).
+\begin{figure}[H]
+\image[0.75]{Successo_Lineare_scala_lineare}{Ricerca con sucesso (esplorazione lineare)}
+\label{fig:Successo_Lineare_scala_lineare}
+\end{figure}
+
+\label{Motivazione_scala}
+Come si può notare il risulta difficile apprezzare variazioni significative fattori di caricamento di minori di 0.8. Perciò si rappresenteranno principalemente grafici in scala logaritmica. 
+
+\begin{figure}[H]
+\image[0.75]{Successo_Lineare_scala_logaritmica}{Ricerca con successo (esplorazione lineare)}
+\end{figure}
+D'ora in avanti i grafici rappresentati saranno in scala logaritmica se non specificato diversamente.
+
+\begin{figure}[H]
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Successo_Lineare_scala_logaritmica}{Ricerca con successo (esplorazione lineare)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Successo_Quadratico_scala_logaritmica}{Ricerca con successo (esplorazione quadratica)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Successo_Doppio_scala_logaritmica}{Ricerca con successo (esplorazione hash doppio)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Successo_Asintotica_scala_logaritmica}{Ricerca con successo (stima asintotica)}
+\end{subfigure}
+\caption{Andamenti della ricerca con successo a confronto.}
+\label{fig:Successo_quartetto}
+\end{figure}
+
+Come si può notare da questi 4 grafici (figura \ref{fig:Successo_quartetto}) l'andamento delle ricerche con successo hanno un andamento simile tra loro, e simile anche all'andamento della dunzione di stima asintotica. Questo però non ci permette di apprezzare le differenze relative.
+
+\begin{figure}[H]
+\image[0.75]{Successo_Confronto_Asintotico_scala_logaritmica}{Confronto tra le esplorazioni nel caso delle ricerche con successo}
+\label{fig:Successo_Confronto_Asintotico_scala_logaritmica}
+\end{figure} 
+Da quanto si può notare dal grafico in figura \ref{fig:Successo_Confronto_Asintotico_scala_logaritmica} l'andamento relativo delle 3 esplorazioni si alterna. Possiamo infatti notare che il grafico dell'esplorazione lineare si trova al di sotto del degli altri 2 tipi di esplorazione, per poi cambiare intorno ad un fattore di caricamento di 0.8. Invece le esplorazioni quadratica e con doppio hash sembrano sovrapporsi per quasi tutto il tempo. Inoltre possiamo vedere come la funzione disegnata in nero (la funzione di stima asintotica) si discosti molto da quelle individuate sperimentalmente, ma mostra un andamento simile ad esse. Infatti dobbiamo ricorcare come la stima asintotica "nasconda", rispetto alla funzione assoluta, costanti moltiplicative e termini di grado inferiore. Notare che il grafico di questa funzione è stato normalizzato al valore massimo ottenuto dalle altre funzioni al fine di rendelo visibile su una scala che non deformasse le altre funzioni. 
+
+Potrebbe essere utile visualizzare l'andamento di questi tempi accorpandoli per range di fattori di caricamente. Il seguente grafico infatti presenta la media di questi valori accorpati per range di stima asintotica, ovvero sull'indice $i-esimo$ si trova la media dei costi per tutti i test con fattore di caricamento $\alpha \in [\frac{i}{10}, \frac{i + 1}{10})$.
+
+\begin{figure}[H]
+\image[0.75]{Successo_Confronto_barre_scala_logaritmica}{Media per raggruppamento del fattore di caricamento}
+\label{fig:Successo_Confronto_barre_scala_logaritmica}
+\end{figure}
+
+Il grafico di figura \ref{fig:Successo_Confronto_barre_scala_logaritmica} conferma di nuovo la conclusione che avevamo trovato prima, mettendo però in evidenza come le differenze tra esplorazione quadratica e ad hash doppio a favore di quest'ultima.
+
+\subsubsection{Commento}
+Alla luce di questi risultati possiamo dire che gli esperimenti fatti confemrano i risultati teorici che volevamo verificare. Infatti possiamo notare che i grafici generati sono ragionevolemnte simili alla funzione di stima asintotica, ed inoltre presentano le differenze attendibili.
+
+Infatti si può notare come l'esplorazione con doppio hash fosse leggermente più efficente di quella quadratica in virtù del fatto che la prima, differentemente dalla seconda, non presenta effetti di clustering secondario. E per fattori di caricamento abbastanza alti ($\alpha > 0.8$) l'esplorazione lineare risulta peggiore delle altre. Il motivo per cui invece per valori di $\alpha < 0.7$ è da trovare nel modo con cui le funzioni hash siano implementate. Trascurando il calcolo di due moduli e le somme (le prime perchè comuni a tutte, le seconde perchè il loro impatto trascurabile), si trova che l'esplorazione lineare esegue meno istruzioni e più efficenti. Infatti per l'esplorazione linera bisogna solamente eseguire un prodotto tra interi, mentre per l'esplorazione quadratica 2 prodotti in virgola mobile (meno efficenti di quelle tra interi), e per l'hash doppio un altro modulo (ben più costoso di prodotti fra numeri).
+
+C'è da considerare che dato le premesse teoriche era ragionevole aspettarsi una maggiore differenze tra esplorazione quadratica e con doppio hash, ma d'altra parte la teoria riguardante il clustering non forniva in nessun modo una qualche valutazione di tipo quantitativa.
+
+\subsection{Ricerca con Insuccesso}
+In questa sezione andremo ad eseminare i rsiultati riguardanti l'operazione di ricerca con insuccesso. Come già accennato nel primo paragrafo della sezione \ref{Motivazione_scala} mostreremo soltanto grafici in scala logaritmica.
+
+Questi che seguono sono i risultati ottenuti messi a confronto.
+\begin{figure}[H]
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Insuccesso_Lineare_scala_logaritmica}{Ricerca con insuccesso (esplorazione lineare)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Insuccesso_Quadratico_scala_logaritmica}{Ricerca con insuccesso (esplorazione quadratica)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Insuccesso_Doppio_scala_logaritmica}{Ricerca con insuccesso (esplorazione con doppio hash)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Insuccesso_Asintotica_scala_logaritmica}{Ricerca con insuccesso (stima asintotica)}
+\end{subfigure}
+\caption{Confronto tra gli andamenti delle ricerche con insuccesso.}
+\label{fig:Insuccesso_quartetto}
+\end{figure}
+
+Come mostrato in figura \ref{fig:Insuccesso_quartetto} l'andamento di queste funzioni è simile tra loro. Come fatto precedentemente mettiamole a confronto prima sovrapponendole sullo stesso grafico, e poi con la rappresentazione ragguppata.  
+
+\begin{figure}[H]
+\image[0.75]{Insuccesso_Confronto_Asintotico_scala_logaritmica}{Confronto tra andementi delle funzioni nel caso di ricerche con insuccesso}
+\label{fig:Insuccesso_Confronto_Asintotico_scala_logaritmica}
+\end{figure}
+
+Il grafico rappresentato in figura \ref{fig:Insuccesso_Confronto_Asintotico_scala_logaritmica} ci mostra come le funzioni (compresa quella asintotica) seguano lo stesso andamento. Differentemente dal caso precedente si possono notare 2 effetti diversi: il primo è che la funzione con esplorazione lineare diventa meno efficente per valori più piccoli (ora per $\alpha > 0.6$), il secondo che per valori di $\alpha \longrightarrow 1$ si può notare come i valori delle esplorazioni sovrappongano.
+
+\begin{figure}[H]
+\image[0.75]{Insuccesso_Confronto_barre_scala_logaritmica}{Media per raggruppamento dei tempi per la ricerca con insuccesso}
+\label{fig:Insuccesso_Confronto_barre_scala_logaritmica}
+\end{figure}
+
+Come mostra il grafico in figura \ref{fig:Insuccesso_Confronto_barre_scala_logaritmica} questi 2 andamenti sono confermati anche nel caso di un raggruppamento per fattori di caricamento. Ancora una volta l'esplorazione con doppio hash risulta leggermente più efficente di quella quadratica.
+
+In generale, mettendo a confronto la figura \ref{fig:Insuccesso_Confronto_barre_scala_logaritmica} (ricerca con insuccesso) e figura \ref{fig:Successo_Confronto_barre_scala_logaritmica} (ricerca con successo) il tempo assoluto richiesto per eseguire una ricerca con insuccesso è più alto.
+
+\subsubsection{Commento}
+Anche in questo caso possiamo dire di aver verificato le stime asintotiche individuate dalla teoria. Però risultano, rispetto alla ricerca con successo, nuovi fenomeni la cui spiegazione va trovata nella \emph{natura} della ricerca con insuccesso.
+
+La ricerca con insuccesso è il caso peggiore per quanto riguarda le tabelle hash, questo perchè dovranno esplorare una sequenza di indici fintantochè non trovano una cella non allocata (indicata con \emph{NIL} nel nostro caso). Questo accentua gli effetti negativi di funzioni hash affette da clustering. Questo quindi giustifica perchè la velocità di ricerca dell'hash con esplorazione lineare peggiori rispetto a quella delle altre 2.
+
+Invece per guistificare la "sovrapposizione" di tutti gli andamenti per gli $\alpha \longrightarrow 1$ bisogna considerare il caso specifico. Infatti quando la tabella hash è piena (per $\alpha = 1$) si ottiene che una ricerca con insuccesso degenera in una ricerca con insuccesso di una lista concatenata (dove possiamo considerare la lista come la sequenza degli elementi nelle celle generata dalla sequenza di esplorazione), e che quindi l'effetto dei clustering è del tutto irrilevante. Anzi, si ottine che, come mostrato nella figura \ref{fig:Insuccesso_Confronto_Asintotico_scala_logaritmica}, nel caso specifico $\alpha = 1$ l'esplorazione lineare torna ad essere leggermente più efficente (ricordarsi che nella figura \ref{fig:Insuccesso_Confronto_barre_scala_logaritmica} l'ultima barra è una media di ricerche per gli $\alpha \in [0.9, 1]$).
+
+\subsection{Inserimento}
+In questo paragrafo andremo a verificare i risultati sperimentali dell'inserimento. In questo caso dovremmo confrontare l'inserimento con una funzione asintotica diversa, e inoltre non esistono varianti all'inserimento. Come già detto precedentemente, per rendere più facilmente apprezzabili le variazioni dei grafici questi verranno mostrati in scala logaritmica.
+
+\begin{figure}[H]
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Inserimento_Lineare_scala_logaritmica}{Inserimento (esplorazione lineare)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Inserimento_Quadratico_scala_logaritmica}{Inserimento (esplorazione quadratica)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Inserimento_Doppio_scala_logaritmica}{Inserimento (esplorazione con doppio hash)}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Inserimento_Asintotica_scala_logaritmica}{Inserimento (stima asintotica)}
+\end{subfigure}
+\caption{Confronto tra gli andamenti degli inserimenti.}
+\label{fig:Inserimento_quartetto}
+\end{figure}
+
+Come mostarto dai grafici in nella figura \ref{fig:Inserimento_quartetto} possiamo vedere come le varei esplorazioni si assomiglino come andamento. In questo caso però la funzione di stima sintotica ha um andamento abbastanza diverso (lasciando perdere quelli che sono i valori assoluti. Infatti possiamo notare come le funzioni delle esplorazioni subiscano una rapida crescità per gli $\alpha \longleftrightarrow 1$, dovuti dal fattore $\frac{1}{1 - \alpha}$ che si trova dentro il logaritmo. 
+
+\begin{figure}[H]
+\image[0.75]{Inserimento_Confronto_asintotico_scala_logaritmica}{Confronto tra adamenti dell'inserimento}
+\label{fig:Inserimento_Confronto_asintotico_scala_logaritmica}
+\end{figure}
+
+Invece la figura \ref{fig:Inserimento_Confronto_asintotico_scala_logaritmica} ci permette di apprezzare meglio le differenze tra le varie esplorazioni. Per prima cosa possaimo notare che la funzione di stima asintotica, per quanto normalizzata, non si avvicina molto all'andamento delle altre funzioni. %TODO aggiustare la normalizzazioni.
+Come nella ricerca con insuccesso l'eplorazione lineare diventa meno efficente per $\alpha \simeq 0.6$, per poi riallenearsi con la tabella piena.
+
+\begin{figure}[H]
+\image[0.75]{Inserimento_Confronto_barre_scala_logaritmica}{Confronto tra adamenti dell'inserimento}
+\label{fig:Inserimento_Confronto_barre_scala_logaritmica}
+\end{figure}
+
+Anche il garfico a barre (figura \ref{fig:Inserimento_Confronto_barre_scala_logaritmica}) mette conferma gli andamenti descritti precedentemente; sia il cambio di \emph{andamento migliore} verso $\alpha \simeq 0.6$, sia che l'andamento con hash doppio sia leggermente migliore dell'esplorazione quadratica.
+
+\subsubsection{Commento}
+
+Possiamo ancora una volta dire come gli aspetti teorici sono stati ragionevolemnte verificati come ci aspettavamo. Inoltre possiamo notare una certa somiglianza, sia in andamento che valori assoluti, tra i tempi dell'inserimento e quelli della ricerca con insuccesso.
+
+\begin{figure}[H]
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Insuccesso_Confronto_barre_scala_logaritmica}{Raggruppamento tempi di ricerca con insuccesso}
+\end{subfigure}
+\begin{subfigure}[b]{0.5\textwidth}
+\image{Inserimento_Confronto_barre_scala_logaritmica}{Raggruppamento tempi di inserimento}
+\end{subfigure}
+\caption{Confronto tra ricerca con insuccesso inserimento.}
+\label{fig:Confronto_ricerca_insuccesso}
+\end{figure}
+
+Come mostrano i garfici messi a confronto nella figura \ref{fig:Confronto_ricerca_insuccesso} (che sono gli stessi rispettivamente di figura \ref{fig:Insuccesso_Confronto_barre_scala_logaritmica} e \ref{fig:Inserimento_Confronto_barre_scala_logaritmica}) che i valori assoluti sono molto simili. Questo perchè i casi in entrambi i casi la sequenza di esplorazione deve essere esplorata finchè non troviamo una cella vuota prima di poter giungere al raggiungimento del risultato. Questo è perticolarmente vero poichè abbiamo supposto che non vengano eliminati nessun elemento, e che quindi non esistano celle marcate come DEL che farebbero terminare prima l'inserimento.
+
+\subsection{Esperimenti sulla dimensione della Tabella}
+\begin{Huge}
+TODO
+\end{Huge}
+\subsection{Esploraione lineare con coefficenti diversi}
+\begin{Huge}
+TODO
+\end{Huge}
+\subsection{Tempi su caso operativo}
+\begin{Huge}
+TODO
+\end{Huge}
+\section{Conclusioni}
+
+\subsection{Aderenza ai risultati teorici}
+
+\subsection{Risultati pratici}
+
+
+
+\newpage
+
+\newpage
+
+\listoffigures
+\listoftables
+%\printindex
+\end{document}
