@@ -12,23 +12,6 @@ class test_type(IntEnum):
     Fail = 2
     Mixed = 3
 
-def setup_plot(xlabel, ylabel, title, isLog: bool = True):
-    plt.figure()
-    ax = plt.gca()
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
-    plt.grid(True)
-    if(isLog):
-        plt.yscale("log")
-    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
-
-def generate_plot(save: bool = False, file_name = "Plot"):
-    plt.legend(loc = 'upper left')
-    if(save):
-        plt.savefig("./Relazione/Immagini/" + file_name + ".png")
-    plt.draw()
-
 """
 In questo esperimento adremo a verificare il funzionamento di una tabella hash 
 con eplorazione lineare.
@@ -111,6 +94,80 @@ def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose:
 
     return (load_factors, times)
 
+def search_experiments(m, m_q, iter, interval, verbose, type: test_type,  suffix = ""):
+    start = timer()
+
+    hashLinearSuccess = open_hash(m, hash_type.Linear)
+    hashQuadraticSuccess = open_hash(m_q, hash_type.Quadratic, 0.5, 0.5)
+    hashDoubleSuccess = open_hash(m, hash_type.Double)
+
+    if(verbose):
+        print("Ricerca Lineare Successo")
+    xlinearSuccess, ylinearSuccess = search_test(hashLinearSuccess, type, iter, interval, verbose)
+
+    if(verbose):
+        print("Ricerca Quadratico Successo")
+    xquadraticSuccess, yquadraticSuccess = search_test(hashQuadraticSuccess, type, iter, interval, verbose)
+
+    if(verbose):
+        print("Ricerca Doppio Successo")
+    xdoubleSuccess, ydoubleSuccess = search_test(hashDoubleSuccess, type, iter, interval, verbose)
+
+    end = timer()
+
+    prefix = ""
+
+    if(type == test_type.Success):
+        prefix = "Successo"
+    elif(type == test_type.Fail):
+        prefix = "Insuccesso"
+    elif(type == test_type.Mixed):
+        prefix == "Misto"
+
+    save_on_file(xlinearSuccess, ylinearSuccess, "Risultati/" + prefix + "_Lineare" + suffix + ".txt")
+    save_on_file(xquadraticSuccess, yquadraticSuccess, "Risultati/" + prefix + "_Quadratico" + suffix + ".txt")
+    save_on_file(xdoubleSuccess, ydoubleSuccess, "Risultati/" + prefix + "_Doppio" + suffix + ".txt")
+
+    return end - start
+
+def save_on_file(x, y, file_name):
+    file = open(file_name, "w")
+    file.write("x = " + str(x) + "\n")
+    file.write("y = " + str(y) + "\n")
+    file.close()
+
+def load_from_file(file_name):
+    
+    coordinates = {
+        "x" : [],
+        "y" : []
+    }
+
+    file = open(file_name, "r")
+    data = file.readlines()
+    for i in range(len(data)):
+        array = data[i]
+
+        axis = array.strip().removesuffix("]")
+
+        coordinate = axis[0]
+        axis = axis.partition("[")[2]
+        elements = axis.split(",")
+        for value in elements:
+            value = value.strip()
+            coordinates[coordinate].append(float(value))
+    
+    return coordinates["x"], coordinates["y"]
+
+def create_function_plot(x, y, title, label, color, save, file_name, annotate = True, isLog = True):
+    setup_plot("Fattore di Caricamento", "Tempo (ms)", title, isLog)
+    plt.plot(x, y, color + "o-", markersize = 2, label = label)
+    if(annotate):
+        plt.annotate(text = "%.2f" % (y[-1]), xy = (x[-1], y[-1]), xytext=(x[-1] * 0.9, y[-1] * 0.8))
+    generate_plot(save, file_name)
+
+
+
 def generate_bar_values(xfirst, yfirst, xsecond, ysecond, xthird, ythird):
     first_average = [0] * 10
     first_numbers = [0] * 10
@@ -153,6 +210,23 @@ def generate_bar_values(xfirst, yfirst, xsecond, ysecond, xthird, ythird):
 
     return first_average, second_average, third_average
 
+def setup_plot(xlabel , ylabel, title, isLog: bool = True):
+    plt.figure()
+    ax = plt.gca()
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.grid(True)
+    if(isLog):
+        plt.yscale("log")
+    ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
+
+def generate_plot(save: bool = False, file_name = "Plot"):
+    plt.legend(loc = 'upper left')
+    if(save):
+        plt.savefig("./Relazione/Immagini/" + file_name + ".png")
+    plt.draw()
+
 """
 Questa funzione genera come risultato la potenza esatta del 2 più vicina al parametro fornito.
 Questo ci serve perchè per poter usare l'eplorazione quadratica nel caso linerare con 
@@ -167,33 +241,3 @@ def closest_two_power(x: int):
         res = next
         next *= 2
     return res
-
-def save_on_file(x, y, file_name):
-    file = open(file_name, "w")
-    file.write("x = " + str(x) + "\n")
-    file.write("y = " + str(y) + "\n")
-    file.close()
-
-def load_from_file(file_name):
-    
-    coordinates = {
-        "x" : [],
-        "y" : []
-    }
-
-    file = open(file_name, "r")
-    data = file.readlines()
-    for i in range(len(data)):
-        array = data[i]
-
-        axis = array.strip().removesuffix("]")
-
-        coordinate = axis[0]
-        axis = axis.partition("[")[2]
-        elements = axis.split(",")
-        for value in elements:
-            value = value.strip()
-            coordinates[coordinate].append(int(value))
-    
-    return coordinates
-

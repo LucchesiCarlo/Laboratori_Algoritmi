@@ -4,23 +4,21 @@ from Funzioni_per_Sperimentazioni import *
 from Codice.Open_Hash import *
 
 
-def execute_success(m, iter, interval, verbose, save):
+def execute_success(m, iter, interval, verbose, save, suffix = ""):
+    
+    total_time = search_experiments(m, closest_two_power(m), iter, interval, verbose, test_type.Success, suffix)
+    
+    process_plots(save, "Successo", suffix)
 
-    hashLinearSuccess = open_hash(m, hash_type.Linear)
-    hashQuadraticSuccess = open_hash(closest_two_power(m), hash_type.Quadratic, 0.5, 0.5)
-    hashDoubleSuccess = open_hash(m, hash_type.Double)
+    return total_time
 
-    start = timer()
-    print("Ricerca Lineare Successo")
-    xlinearSuccess, ylinearSuccess = search_test(hashLinearSuccess, test_type.Success, iter, interval, verbose)
 
-    print("Ricerca Quadratico Successo")
-    xquadraticSuccess, yquadraticSuccess = search_test(hashQuadraticSuccess, test_type.Success, iter, interval, verbose)
-    print("Ricerca Quadratico Insuccesso")
+def process_plots(save, prefix, suffix = ""):
+    xlinearSuccess, ylinearSuccess = load_from_file("Risultati/" + prefix + "_Lineare" + suffix + ".txt")
+    
+    xquadraticSuccess, yquadraticSuccess = load_from_file("Risultati/" + prefix + "_Quadratico" + suffix + ".txt")
 
-    print("Ricerca Doppio Successo")
-    xdoubleSuccess, ydoubleSuccess = search_test(hashDoubleSuccess, test_type.Success, iter, interval, verbose)
-    print("Ricerca Doppio Insucesso")
+    xdoubleSuccess, ydoubleSuccess = load_from_file("Risultati/" + prefix + "_Doppio" + suffix + ".txt")    
 
     rmaximumSuccess = max(ylinearSuccess)
     
@@ -37,35 +35,18 @@ def execute_success(m, iter, interval, verbose, save):
     for i in range(len(xcomparison)):
         ycomparisonSuccess[i] *= maxcomparisonSuccess / ycomparisonSuccess[-1]
 
-
-    end = timer()
-    print("Tempo necessario a concludere tutti i test: %ds" % (end - start))
-
     #Successo Lineare  (Troppo Piatto)  
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Lineare (Successo)", False)
-    plt.plot(xlinearSuccess, ylinearSuccess, "ro-", markersize = 2, label="Lineare")
-    generate_plot(save, "Successo_Lineare_scala_lineare")
 
-    #Successo Lineare    
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Lineare (Successo)")
-    plt.plot(xlinearSuccess, ylinearSuccess, "ro-", markersize = 2, label="Lineare")
-    plt.annotate(text = "%.2f" % (ylinearSuccess[-1]), xy = (xlinearSuccess[-1], ylinearSuccess[-1]),
-                 xytext=(xlinearSuccess[-1] * 0.9, ylinearSuccess[-1] * 0.8))
-    generate_plot(save, "Successo_Lineare_scala_logaritmica")
+    create_function_plot(xlinearSuccess, ylinearSuccess, "Ricerca Lineare (Successo)", "Lineare", "r", save, "Successo_Lineare_scala_lineare", False, False)
+
+    #Successo Lineare
+    create_function_plot(xlinearSuccess, ylinearSuccess, "Ricerca Lineare (Successo)", "Lineare", "r", save, "Successo_Lineare_scala_logaritmica")
 
     #Successo Quadratico
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Quadratica (Successo)")
-    plt.plot(xquadraticSuccess, yquadraticSuccess, "go-", markersize = 2, label="Quadratica")
-    plt.annotate(text = "%.2f" % (yquadraticSuccess[-1]), xy = (xquadraticSuccess[-1], yquadraticSuccess[-1]),
-                 xytext=(xquadraticSuccess[-1] * 0.9, yquadraticSuccess[-1] * 0.8))
-    generate_plot(save, "Successo_Quadratico_scala_logaritmica")
+    create_function_plot(xlinearSuccess, ylinearSuccess, "Ricerca Quadratica (Successo)", "Quadratica", "g", save, "Successo_Quadratico_scala_logaritmica")
 
-    #SUccesso Doppio
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Doppio Hash (Successo)")
-    plt.plot(xdoubleSuccess, ydoubleSuccess, "bo-", markersize = 2, label="Doppio")
-    plt.annotate(text = "%.2f" % (ydoubleSuccess[-1]), xy = (xdoubleSuccess[-1], ydoubleSuccess[-1]),
-                 xytext=(xdoubleSuccess[-1] * 0.9, ydoubleSuccess[-1] * 0.8))
-    generate_plot(save, "Successo_Doppio_scala_logaritmica")
+    #Successo Doppio
+    create_function_plot(xlinearSuccess, ylinearSuccess, "Ricerca Doppio Hash (Successo)", "Doppio", "b", save, "Successo_Doppio_scala_lineare")
 
     #Funzione della stima asintotica
     setup_plot("Fattore di Caricamento ", "Tempo Asintotico ", "Stima Asintotica Ricerca (Successo)")
@@ -100,8 +81,6 @@ def execute_success(m, iter, interval, verbose, save):
     plt.xticks([i + width for i in range(10)], list(range(10)))
     
     generate_plot(save, "Successo_Confronto_barre_scala_logaritmica")
-
-    return end - start
 
 if(__name__ == "__main__"):
     execute_success(977, 500, 50, True, False)
