@@ -95,26 +95,6 @@ def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose:
     return (load_factors, times)
 
 def search_experiments(m, m_q, iter, interval, verbose, type: test_type,  suffix = ""):
-    start = timer()
-
-    hashLinearSuccess = open_hash(m, hash_type.Linear)
-    hashQuadraticSuccess = open_hash(m_q, hash_type.Quadratic, 0.5, 0.5)
-    hashDoubleSuccess = open_hash(m, hash_type.Double)
-
-    if(verbose):
-        print("Ricerca Lineare Successo")
-    xlinearSuccess, ylinearSuccess = search_test(hashLinearSuccess, type, iter, interval, verbose)
-
-    if(verbose):
-        print("Ricerca Quadratico Successo")
-    xquadraticSuccess, yquadraticSuccess = search_test(hashQuadraticSuccess, type, iter, interval, verbose)
-
-    if(verbose):
-        print("Ricerca Doppio Successo")
-    xdoubleSuccess, ydoubleSuccess = search_test(hashDoubleSuccess, type, iter, interval, verbose)
-
-    end = timer()
-
     prefix = ""
 
     if(type == test_type.Success):
@@ -124,9 +104,56 @@ def search_experiments(m, m_q, iter, interval, verbose, type: test_type,  suffix
     elif(type == test_type.Mixed):
         prefix == "Misto"
 
-    save_on_file(xlinearSuccess, ylinearSuccess, "Risultati/" + prefix + "_Lineare" + suffix + ".txt")
-    save_on_file(xquadraticSuccess, yquadraticSuccess, "Risultati/" + prefix + "_Quadratico" + suffix + ".txt")
-    save_on_file(xdoubleSuccess, ydoubleSuccess, "Risultati/" + prefix + "_Doppio" + suffix + ".txt")
+    hashLinear = open_hash(m, hash_type.Linear)
+    hashQuadratic = open_hash(m_q, hash_type.Quadratic, 0.5, 0.5)
+    hashDouble = open_hash(m, hash_type.Double)
+
+    start = timer()
+    if(verbose):
+        print("Ricerca Lineare " + prefix)
+    xlinear, ylinear = search_test(hashLinear, type, iter, interval, verbose)
+
+    if(verbose):
+        print("Ricerca Quadratico " + prefix)
+    xquadratic, yquadratic = search_test(hashQuadratic, type, iter, interval, verbose)
+
+    if(verbose):
+        print("Ricerca Doppio " + prefix)
+    xdouble, ydouble = search_test(hashDouble, type, iter, interval, verbose)
+
+    end = timer()
+
+
+    save_on_file(xlinear, ylinear, "Risultati/" + prefix +"_Lineare" + suffix + ".txt")
+    save_on_file(xquadratic, yquadratic, "Risultati/" + prefix +"_Quadratico" + suffix + ".txt")
+    save_on_file(xdouble, ydouble, "Risultati/" + prefix + "_Doppio" + suffix + ".txt")
+
+    return end - start
+
+def insert_experiments(m, m_q, iter, interval, verbose,  suffix = ""):
+    start = timer()
+
+    hashLinear = open_hash(m, hash_type.Linear)
+    hashQuadratic = open_hash(m_q, hash_type.Quadratic, 0.5, 0.5)
+    hashDouble = open_hash(m, hash_type.Double)
+
+    if(verbose):
+        print("Inserimento Lineare")
+    xlinear, ylinear = insert_test(hashLinear, iter, interval, verbose)
+
+    if(verbose):
+        print("Inserimento Quadratico")
+    xquadratic, yquadratic = insert_test(hashQuadratic, iter, interval, verbose)
+
+    if(verbose):
+        print("Inserimento Doppio")
+    xdouble, ydouble = insert_test(hashDouble, iter, interval, verbose)
+
+    end = timer()
+
+    save_on_file(xlinear, ylinear, "Risultati/Inserimento_Lineare" + suffix + ".txt")
+    save_on_file(xquadratic, yquadratic, "Risultati/Inserimento_Quadratico" + suffix + ".txt")
+    save_on_file(xdouble, ydouble, "Risultati/Inserimento_Doppio" + suffix + ".txt")
 
     return end - start
 

@@ -43,10 +43,10 @@ def process_plots(save, prefix, suffix = ""):
     create_function_plot(xlinearSuccess, ylinearSuccess, "Ricerca Lineare (Successo)", "Lineare", "r", save, "Successo_Lineare_scala_logaritmica")
 
     #Successo Quadratico
-    create_function_plot(xlinearSuccess, ylinearSuccess, "Ricerca Quadratica (Successo)", "Quadratica", "g", save, "Successo_Quadratico_scala_logaritmica")
+    create_function_plot(xquadraticSuccess, yquadraticSuccess, "Ricerca Quadratica (Successo)", "Quadratica", "g", save, "Successo_Quadratico_scala_logaritmica")
 
     #Successo Doppio
-    create_function_plot(xlinearSuccess, ylinearSuccess, "Ricerca Doppio Hash (Successo)", "Doppio", "b", save, "Successo_Doppio_scala_lineare")
+    create_function_plot(xdoubleSuccess, ydoubleSuccess, "Ricerca Doppio Hash (Successo)", "Doppio", "b", save, "Successo_Doppio_scala_logaritmica")
 
     #Funzione della stima asintotica
     setup_plot("Fattore di Caricamento ", "Tempo Asintotico ", "Stima Asintotica Ricerca (Successo)")

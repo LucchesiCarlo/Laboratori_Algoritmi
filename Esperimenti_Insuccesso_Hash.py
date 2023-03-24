@@ -4,28 +4,27 @@ from Funzioni_per_Sperimentazioni import *
 from Codice.Open_Hash import *
 
 
-def execute_fail(m, iter, interval, verbose, save):
+def execute_fail(m, iter, interval, verbose, save, suffix = ""):
 
-    hashLinearFail = open_hash(m, hash_type.Linear)
-    hashQuadraticFail = open_hash(closest_two_power(m), hash_type.Quadratic, 0.5, 0.5)
-    hashDoubleFail = open_hash(m, hash_type.Double)
+    total_time = search_experiments(m, closest_two_power(m), iter, interval, verbose, test_type.Fail, suffix)
+    
+    process_plots(save, "Insuccesso", suffix)
 
-    start = timer()
-    print("Ricerca Lineare Insuccesso")
-    xlinearFail, ylinearFail = search_test(hashLinearFail, test_type.Fail, iter, interval, verbose)
+    return total_time
 
-    print("Ricerca Quadratico Insuccesso")
-    xquadraticFail, yquadraticFail = search_test(hashQuadraticFail, test_type.Fail, iter, interval, verbose)
+def process_plots(save, prefix, suffix = ""):
 
-    print("Ricerca Doppio Insucesso")
-    xdoubleFail, ydoubleFail = search_test(hashDoubleFail, test_type.Fail, iter, interval, verbose)
+    xlinearFail, ylinearFail = load_from_file("Risultati/" + prefix + "_Lineare" + suffix + ".txt")
+    
+    xquadraticFail, yquadraticFail = load_from_file("Risultati/" + prefix + "_Quadratico" + suffix + ".txt")
+
+    xdoubleFail, ydoubleFail = load_from_file("Risultati/" + prefix + "_Doppio" + suffix + ".txt")    
    
     rmaximumFail = max(ylinearFail)
 
     dmaximumFail = max(ydoubleFail)
 
-    qmaximumFail = max(yquadraticFail)
-    
+    qmaximumFail = max(yquadraticFail)    
 
     maxcomparisonFail = max(rmaximumFail, dmaximumFail, qmaximumFail)
     
@@ -35,34 +34,17 @@ def execute_fail(m, iter, interval, verbose, save):
     for i in range(len(xcomparison)):
         ycomparisonFail[i] *= maxcomparisonFail / ycomparisonFail[-1]
 
-    end = timer()
-    print("Tempo necessario a concludere tutti i test: %ds" % (end - start))
+    #Insuccesso Lineare  (Troppo Piatto)  
+    create_function_plot(xlinearFail, ylinearFail, "Ricerca Lineare (Insuccesso)", "Lineare", "r", save, "Insuccesso_Lineare_scala_lineare", False, False)
 
-    #Successo Lineare  (Troppo Piatto)  
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Lineare (Insuccesso)", False)
-    plt.plot(xlinearFail, ylinearFail, "ro-", markersize = 2, label="Lineare")
-    generate_plot(save, "Insuccesso_Lineare_scala_lineare")
+    #Inuccesso Lineare 
+    create_function_plot(xlinearFail, ylinearFail, "Ricerca Lineare (Insuccesso)", "Lineare", "r", save, "Insuccesso_Lineare_scala_logaritmica")
 
-    #Successo Lineare    
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Lineare (Insuccesso)")
-    plt.plot(xlinearFail, ylinearFail, "ro-", markersize = 2, label="Lineare")
-    plt.annotate(text = "%.2f" % (ylinearFail[-1]), xy = (xlinearFail[-1], ylinearFail[-1]),
-                 xytext=(xlinearFail[-1] * 0.9, ylinearFail[-1] * 0.8))
-    generate_plot(save, "Insuccesso_Lineare_scala_logaritmica")
+    #Insuccesso Quadratico
+    create_function_plot(xquadraticFail, yquadraticFail, "Ricerca Quadratica (Insuccesso)", "Quadratica", "g", save, "Insuccesso_Quadratico_scala_logaritmica")
 
-    #Successo Quadratico
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Quadratica (Insuccesso)")
-    plt.plot(xquadraticFail, yquadraticFail, "go-", markersize = 2, label="Quadratica")
-    plt.annotate(text = "%.2f" % (yquadraticFail[-1]), xy = (xquadraticFail[-1], yquadraticFail[-1]),
-                 xytext=(xquadraticFail[-1] * 0.9, yquadraticFail[-1] * 0.8))
-    generate_plot(save, "Insuccesso_Quadratico_scala_logaritmica")
-
-    #SUccesso Doppio
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Ricerca Doppio Hash (Insuccesso)")
-    plt.plot(xdoubleFail, ydoubleFail, "bo-", markersize = 2, label="Doppio")
-    plt.annotate(text = "%.2f" % (ydoubleFail[-1]), xy = (xdoubleFail[-1], ydoubleFail[-1]),
-                 xytext=(xdoubleFail[-1] * 0.9, ydoubleFail[-1] * 0.8))
-    generate_plot(save, "Insuccesso_Doppio_scala_logaritmica")
+    #Insuccesso Doppio
+    create_function_plot(xdoubleFail, ydoubleFail, "Ricerca Doppio Hash (Inuccesso)", "Doppio", "b", save, "Insucceso_Doppio_scala_logaritmica")
 
     #Funzione della stima asintotica
     setup_plot("Fattore di Caricamento ", "Tempo Asintotico ", "Stima Asintotica Ricerca (Insuccesso)")
@@ -98,7 +80,6 @@ def execute_fail(m, iter, interval, verbose, save):
     
     generate_plot(save, "Insuccesso_Confronto_barre_scala_logaritmica")
 
-    return end - start
 
 if(__name__ == "__main__"):
     execute_fail(977, 500, 50, True, False)

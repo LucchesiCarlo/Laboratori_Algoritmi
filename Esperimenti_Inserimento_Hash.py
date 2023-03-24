@@ -4,23 +4,22 @@ from Funzioni_per_Sperimentazioni import *
 from Codice.Open_Hash import *
 
 
-def execute_insert(m, iter, interval, verbose, save):
+def execute_insert(m, iter, interval, verbose, save, suffix = ""):
 
-    hashLinearInsert = open_hash(m, hash_type.Linear)
-    hashQuadraticInsert = open_hash(closest_two_power(m), hash_type.Quadratic, 0.5, 0.5)
-    hashDoubleInsert = open_hash(m, hash_type.Double)
-
-    start = timer()
-    print("Inserimento Lineare")
-    xlinearInsert, ylinearInsert = insert_test(hashLinearInsert, iter, interval, verbose)
+    total_time = insert_experiments(m, closest_two_power(m), iter, interval, verbose, suffix)
     
+    process_plots(save, "Inserimento", suffix)
 
-    print("Inserimento Quadratico")
-    xquadraticInsert, yquadraticInsert = insert_test(hashQuadraticInsert, iter, interval, verbose)
+    return total_time
 
-    print("Inserimento Doppio")
-    xdoubleInsert, ydoubleInsert = insert_test(hashDoubleInsert, iter, interval, verbose)
+def process_plots(save, prefix, suffix = ""):
+
+    xlinearInsert, ylinearInsert = load_from_file("Risultati/" + prefix + "_Lineare" + suffix + ".txt")
     
+    xquadraticInsert, yquadraticInsert = load_from_file("Risultati/" + prefix + "_Quadratico" + suffix + ".txt")
+
+    xdoubleInsert, ydoubleInsert = load_from_file("Risultati/" + prefix + "_Doppio" + suffix + ".txt")    
+
     rmaximumInsert = max(ylinearInsert)
     
     dmaximumInsert = max(ydoubleInsert)
@@ -34,36 +33,18 @@ def execute_insert(m, iter, interval, verbose, save):
 
     for i in range(len(xcomparison)):
         ycomparisonInsert[i] *= maxcomparisonInsert / ycomparisonInsert[-1]
+ 
+    #Inserimento Lineare  (Troppo Piatto)   
+    create_function_plot(xlinearInsert, ylinearInsert, "Inserimento Lineare", "Lineare", "r", save, "Inserimento_Lineare_scala_lineare", False, False)
 
+    #Inseriemnto Lineare  
+    create_function_plot(xlinearInsert, ylinearInsert, "Inserimento Lineare", "Lineare", "r", save, "Inserimento_Lineare_scala_logaritmica")
 
-    end = timer()
-    print("Tempo necessario a concludere tutti i test: %ds" % (end - start))
-
-    #Successo Lineare  (Troppo Piatto)  
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Inserimento Lineare", False)
-    plt.plot(xlinearInsert, ylinearInsert, "ro-", markersize = 2, label="Lineare")
-    generate_plot(save, "Inserimento_Lineare_scala_lineare")
-
-    #Successo Lineare    
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Inserimento Lineare")
-    plt.plot(xlinearInsert, ylinearInsert, "ro-", markersize = 2, label="Lineare")
-    plt.annotate(text = "%.2f" % (ylinearInsert[-1]), xy = (xlinearInsert[-1], ylinearInsert[-1]),
-                 xytext=(xlinearInsert[-1] * 0.9, ylinearInsert[-1] * 0.8))
-    generate_plot(save, "Inserimento_Lineare_scala_logaritmica")
-
-    #Successo Quadratico
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Inserimento Quadratica")
-    plt.plot(xquadraticInsert, yquadraticInsert, "go-", markersize = 2, label="Quadratica")
-    plt.annotate(text = "%.2f" % (yquadraticInsert[-1]), xy = (xquadraticInsert[-1], yquadraticInsert[-1]),
-                 xytext=(xquadraticInsert[-1] * 0.9, yquadraticInsert[-1] * 0.8))
-    generate_plot(save, "Inserimento_Quadratico_scala_logaritmica")
+    #Inserimento Quadratico
+    create_function_plot(xquadraticInsert, yquadraticInsert, "Inseriemnto Quadratica", "Quadratica", "g", save, "Inserimento_Quadratico_scala_logaritmica")
 
     #SUccesso Doppio
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", "Inserimento Doppio Hash")
-    plt.plot(xdoubleInsert, ydoubleInsert, "bo-", markersize = 2, label="Doppio")
-    plt.annotate(text = "%.2f" % (ydoubleInsert[-1]), xy = (xdoubleInsert[-1], ydoubleInsert[-1]),
-                 xytext=(xdoubleInsert[-1] * 0.9, ydoubleInsert[-1] * 0.8))
-    generate_plot(save, "Inserimento_Doppio_scala_logaritmica")
+    create_function_plot(xdoubleInsert, ydoubleInsert, "Inserimento Doppio Hash", "Doppio", "b", save, "Inserimento_Doppio_scala_logaritmica")
 
     #Funzione della stima asintotica
     setup_plot("Fattore di Caricamento ", "Tempo Asintotico ", "Stima Asintotica Inserimento")
@@ -98,8 +79,6 @@ def execute_insert(m, iter, interval, verbose, save):
     plt.xticks([i + width for i in range(10)], list(range(10)))
     
     generate_plot(save, "Inserimento_Confronto_barre_scala_logaritmica")
-
-    return end - start
 
 if(__name__ == "__main__"):
     execute_insert(977, 500, 50, True, False)
