@@ -69,18 +69,21 @@ def process_plots(save, prefix, suffix = ""):
     generate_plot(save, "Inserimento_Confronto_Asintotico_scala_logaritmica")
 
     #Rappresentazioni stime asintotiche con grafico a barre.
-    setup_plot("Raggruppamenti fattore di Caricamento", "Tempo raggruppato", "Confronto tra Inserimenti")
+    x = [i/10 for i in range(10)]
 
-    linear_average, quadratic_average, double_average = generate_bar_values(xlinearInsert, ylinearInsert, xquadraticInsert, yquadraticInsert, xdoubleInsert, ydoubleInsert)
+    x_values = [
+        xlinearInsert,
+        xquadraticInsert,
+        xdoubleInsert
+    ]
 
-    x = list(range(10))
-    width = 0.27
-    plt.bar(x, linear_average, width, label = "Lineare", color = "red")
-    plt.bar([i + width for i in x], quadratic_average, width, label = "Quadratico", color = "green")
-    plt.bar([i + 2 * width for i in x], double_average, width, label = "Doppio", color = "blue")
-    plt.xticks([i + width for i in range(10)], list(range(10)))
-    
-    generate_plot(save, "Inserimento_Confronto_barre_scala_logaritmica")
+    y_values = [
+        [ylinearInsert, "Lineare", "red"],
+        [yquadraticInsert, "Quadratico", "green"],
+        [ydoubleInsert, "Doppio", "blue"],
+    ]
+
+    create_bar_plot(x, x_values, y_values, "Confronto tra Inserimenti", 0.27, save, "Inserimento_Confronto_barre_scala_logaritmica")
 
 if(__name__ == "__main__"):
     execute_insert(977, 500, 50, True, False)

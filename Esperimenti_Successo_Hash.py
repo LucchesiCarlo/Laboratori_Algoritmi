@@ -71,18 +71,21 @@ def process_plots(save, prefix, suffix = ""):
     generate_plot(save, "Successo_Confronto_Asintotico_scala_logaritmica")
 
     #Rappresentazioni stime asintotiche con grafico a barre.
-    setup_plot("Raggruppamenti fattore di Caricamento", "Tempo raggruppato", "Confronto tra Ricerche (Successo)")
+    x = [i/10 for i in range(10)]
 
-    linear_average, quadratic_average, double_average = generate_bar_values(xlinearSuccess, ylinearSuccess, xquadraticSuccess, yquadraticSuccess, xdoubleSuccess, ydoubleSuccess)
+    x_values = [
+        xlinearSuccess,
+        xquadraticSuccess,
+        xdoubleSuccess
+    ]
 
-    x = list(range(10))
-    width = 0.27
-    plt.bar(x, linear_average, width, label = "Lineare", color = "red")
-    plt.bar([i + width for i in x], quadratic_average, width, label = "Quadratico", color = "green")
-    plt.bar([i + 2 * width for i in x], double_average, width, label = "Doppio", color = "blue")
-    plt.xticks([i + width for i in range(10)], list(range(10)))
-    
-    generate_plot(save, "Successo_Confronto_barre_scala_logaritmica")
+    y_values = [
+        [ylinearSuccess, "Lineare", "red"],
+        [yquadraticSuccess, "Quadratico", "green"],
+        [ydoubleSuccess, "Doppio", "blue"],
+    ]
+
+    create_bar_plot(x, x_values, y_values, "Confronto tra Ricerche (Successo)", 0.27, save, "Successo_Confronto_barre_scala_logaritmica")
 
 if(__name__ == "__main__"):
     execute_success(977, 500, 50, True, False)

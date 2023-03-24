@@ -186,14 +186,24 @@ def load_from_file(file_name):
     
     return coordinates["x"], coordinates["y"]
 
-def create_function_plot(x, y, title, label, color, save, file_name, annotate = True, isLog = True):
+def create_function_plot(x, y, title, label, color, save, file_name = "", annotate = True, isLog = True):
     setup_plot("Fattore di Caricamento", "Tempo (ms)", title, isLog)
     plt.plot(x, y, color + "o-", markersize = 2, label = label)
     if(annotate):
         plt.annotate(text = "%.2f" % (y[-1]), xy = (x[-1], y[-1]), xytext=(x[-1] * 0.9, y[-1] * 0.8))
     generate_plot(save, file_name)
 
+def create_bar_plot(indexes, x_values, y_values, title, width, save, file_name = "", isLog = True):
+    setup_plot("Raggruppamenti fattore di Caricamento", "Tempo raggruppato", title, isLog)
+    for i in range(len(y_values)):
+        average = generate_bar_valuess(x_values[i], y_values[i][0])
+        num_values = len(average)
+        plt.bar([j + i * width for j in range(num_values)], average, width, label = y_values[i][1], color = y_values[i][2])
 
+    offset = int(len(y_values) / float(2) - 0.5)
+    plt.xticks([i + offset * width for i in range(10)], indexes)
+    
+    generate_plot(save, file_name)
 
 def generate_bar_values(xfirst, yfirst, xsecond, ysecond, xthird, ythird):
     first_average = [0] * 10
@@ -236,6 +246,26 @@ def generate_bar_values(xfirst, yfirst, xsecond, ysecond, xthird, ythird):
             third_average[i] /= third_numbers[i]
 
     return first_average, second_average, third_average
+
+
+def generate_bar_valuess(x, y):
+    average = [0] * 10
+    numbers = [0] * 10
+
+    for i, j in zip(x, y):
+        i *= 10
+        index = math.floor(i / 1)
+        if(index == 10):
+            index = 9
+        average[index] += j
+        numbers[index] += 1
+
+
+    for i in range(10):
+        if(numbers[i] != 0):
+            average[i] /= numbers[i]
+
+    return average
 
 def setup_plot(xlabel , ylabel, title, isLog: bool = True):
     plt.figure()

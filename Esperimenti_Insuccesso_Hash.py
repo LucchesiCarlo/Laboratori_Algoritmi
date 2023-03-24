@@ -69,18 +69,21 @@ def process_plots(save, prefix, suffix = ""):
     generate_plot(save, "Insuccesso_Confronto_Asintotico_scala_logaritmica")
 
     #Rappresentazioni stime asintotiche con grafico a barre.
-    setup_plot("Raggruppamenti fattore di Caricamento", "Tempo raggruppato", "Confronto tra Ricerche (Insuccesso)")
+    x = [i/10 for i in range(10)]
 
-    linear_average, quadratic_average, double_average = generate_bar_values(xlinearFail, ylinearFail, xquadraticFail, yquadraticFail, xdoubleFail, ydoubleFail)
+    x_values = [
+        xlinearFail,
+        xquadraticFail,
+        xdoubleFail
+    ]
 
-    x = list(range(10))
-    width = 0.27
-    plt.bar(x, linear_average, width, label = "Lineare", color = "red")
-    plt.bar([i + width for i in x], quadratic_average, width, label = "Quadratico", color = "green")
-    plt.bar([i + 2 * width for i in x], double_average, width, label = "Doppio", color = "blue")
-    plt.xticks([i + width for i in range(10)], list(range(10)))
-    
-    generate_plot(save, "Insuccesso_Confronto_barre_scala_logaritmica")
+    y_values = [
+        [ylinearFail, "Lineare", "red"],
+        [yquadraticFail, "Quadratico", "green"],
+        [ydoubleFail, "Doppio", "blue"],
+    ]
+
+    create_bar_plot(x, x_values, y_values, "Confronto tra Ricerche (Insuccesso)", 0.27, save, "Insuccesso_Confronto_barre_scala_logaritmica")
 
 
 if(__name__ == "__main__"):
