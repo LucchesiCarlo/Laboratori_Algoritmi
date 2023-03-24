@@ -20,20 +20,22 @@ def process_plots(save, prefix, suffix = ""):
 
     xdoubleSuccess, ydoubleSuccess = load_from_file("Risultati/" + prefix + "_Doppio" + suffix + ".txt")    
 
-    rmaximumSuccess = max(ylinearSuccess)
+    rminimumSuccess = min(ylinearSuccess)
     
-    dmaximumSuccess = max(ydoubleSuccess)
+    dminimumSuccess = min(ydoubleSuccess)
 
-    qmaximumSuccess = max(yquadraticSuccess)
+    qminimumSuccess = min(yquadraticSuccess)
     
 
-    maxcomparisonSuccess = max(rmaximumSuccess, dmaximumSuccess, qmaximumSuccess)
+    min_range = min(rminimumSuccess, dminimumSuccess, qminimumSuccess)
     
     xcomparison = [i * 0.05 for i in range(1, 20)]
     ycomparisonSuccess = [(1 / (1 - i)) for i in xcomparison]
 
+    min_comparison = min(ycomparisonSuccess)
+
     for i in range(len(xcomparison)):
-        ycomparisonSuccess[i] *= maxcomparisonSuccess / ycomparisonSuccess[-1]
+        ycomparisonSuccess[i] *= min_range / min_comparison
 
     #Successo Lineare  (Troppo Piatto)  
 

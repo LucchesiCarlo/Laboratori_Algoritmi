@@ -20,19 +20,21 @@ def process_plots(save, prefix, suffix = ""):
 
     xdoubleInsert, ydoubleInsert = load_from_file("Risultati/" + prefix + "_Doppio" + suffix + ".txt")    
 
-    rmaximumInsert = max(ylinearInsert)
+    rminimumInsert = min(ylinearInsert)
     
-    dmaximumInsert = max(ydoubleInsert)
+    dminimumInsert = min(ydoubleInsert)
     
-    qmaximumInsert = max(yquadraticInsert)
+    qminimumInsert = min(yquadraticInsert)
 
-    maxcomparisonInsert = max(rmaximumInsert, dmaximumInsert, qmaximumInsert)
+    min_registered = min(rminimumInsert, dminimumInsert, qminimumInsert)
     
     xcomparison = [i * 0.05 for i in range(1, 20)]
     ycomparisonInsert = [(math.log2(1 / (1 - i)) / i) for i in xcomparison]
 
+    min_comaprison = min(ycomparisonInsert)
+
     for i in range(len(xcomparison)):
-        ycomparisonInsert[i] *= maxcomparisonInsert / ycomparisonInsert[-1]
+        ycomparisonInsert[i] *= min_registered / min_comaprison
  
     #Inserimento Lineare  (Troppo Piatto)   
     create_function_plot(xlinearInsert, ylinearInsert, "Inserimento Lineare", "Lineare", "r", save, "Inserimento_Lineare_scala_lineare", False, False)

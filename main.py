@@ -10,11 +10,11 @@ from Esperimenti_Inserimento_Hash import execute_insert
 
 #Numero primo 16381
 #TODO Cambiare 16381. Il fatto che sia troppo vicino ad una potenza esatta del 2 da problemi.
-m = 16381
-iter = 1000
-interval = 150
+m = 10007
+iter = 500
+interval = 250
 verbose = True
-save = True
+save = False
 
 print("Esperiementi sulla ricerca con successo.")
 execute_success(m, iter, interval, verbose, save)

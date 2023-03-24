@@ -20,19 +20,21 @@ def process_plots(save, prefix, suffix = ""):
 
     xdoubleFail, ydoubleFail = load_from_file("Risultati/" + prefix + "_Doppio" + suffix + ".txt")    
    
-    rmaximumFail = max(ylinearFail)
+    rminimumFail = min(ylinearFail)
 
-    dmaximumFail = max(ydoubleFail)
+    dminimumFail = min(ydoubleFail)
 
-    qmaximumFail = max(yquadraticFail)    
+    qminimumFail = min(yquadraticFail)    
 
-    maxcomparisonFail = max(rmaximumFail, dmaximumFail, qmaximumFail)
+    min_registared = min(rminimumFail, dminimumFail, qminimumFail)
     
     xcomparison = [i * 0.05 for i in range(1, 20)]
     ycomparisonFail = [(1 / (1 - i)) for i in xcomparison]
 
+    min_comparison = min(ycomparisonFail)
+
     for i in range(len(xcomparison)):
-        ycomparisonFail[i] *= maxcomparisonFail / ycomparisonFail[-1]
+        ycomparisonFail[i] *= min_registared / min_comparison
 
     #Insuccesso Lineare  (Troppo Piatto)  
     create_function_plot(xlinearFail, ylinearFail, "Ricerca Lineare (Insuccesso)", "Lineare", "r", save, "Insuccesso_Lineare_scala_lineare", False, False)
