@@ -38,11 +38,11 @@ def process_plots(save, type, suffix = ""):
     elif(type == test_type.Insert):
         test_prefix = "Inserimento"
 
-    x_linear, y_linear = load_from_file("Risultati/" + test_prefix + "_Lineare" + suffix + ".txt")
+    x_linear, y_linear = load_from_file(test_prefix + "_Lineare" + suffix + ".txt")
     
-    x_quadratic, y_quadratic = load_from_file("Risultati/" + test_prefix + "_Quadratico" + suffix + ".txt")
+    x_quadratic, y_quadratic = load_from_file(test_prefix + "_Quadratico" + suffix + ".txt")
 
-    x_double, y_double = load_from_file("Risultati/" + test_prefix + "_Doppio" + suffix + ".txt")    
+    x_double, y_double = load_from_file(test_prefix + "_Doppio" + suffix + ".txt")    
 
     l_minimum = min(y_linear)
     
@@ -82,28 +82,21 @@ def process_plots(save, type, suffix = ""):
     for i in range(len(x_comparison)):
         y_comparison[i] *= min_registered / min_comaprison
 
-    title_name = ""
-    
-    if(type == test_type.Success):
-        title_name = "Ricerca con Successo"
-    elif(type == test_type.Fail):
-        title_name = "Ricerca con Insuccesso"    
-    elif(type == test_type.Insert):
-        title_name = "Inserimento"
+    title_name = get_title_name(type)
    
-    create_function_plot(x_linear, y_linear, title_name + " Lineare", "Lineare", "r", save, "Inserimento_Lineare_scala_lineare", False, False)
+    create_function_plot(x_linear, y_linear, title_name + " Lineare", "Lineare", "r", save, test_prefix + "_Lineare_scala_lineare" + suffix, False, False)
 
-    create_function_plot(x_linear, y_linear, title_name + " Lineare", "Lineare", "r", save, "Inserimento_Lineare_scala_logaritmica")
+    create_function_plot(x_linear, y_linear, title_name + " Lineare", "Lineare", "r", save, test_prefix + "_Lineare_scala_logaritmica" + suffix)
 
-    create_function_plot(x_quadratic, y_quadratic, title_name + " Quadratica", "Quadratica", "g", save, "Inserimento_Quadratico_scala_logaritmica")
+    create_function_plot(x_quadratic, y_quadratic, title_name + " Quadratica", "Quadratica", "g", save, test_prefix + "_Quadratico_scala_logaritmica" + suffix)
 
-    create_function_plot(x_double, y_double, title_name + " Doppio Hash", "Doppio", "b", save, "Inserimento_Doppio_scala_logaritmica")
+    create_function_plot(x_double, y_double, title_name + " Doppio Hash", "Doppio", "b", save, test_prefix + "_Doppio_scala_logaritmica" + suffix)
 
     setup_plot("Fattore di Caricamento ", "Tempo Asintotico ", title_name + " Stima Asintotica")
     plt.plot(x_comparison, y_comparison, "ko-", markersize = 2, label="Funzione")
     generate_plot(save, "Inserimento_Asintotica_scala_logaritmica")
 
-    create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name, save, "Inserimento_Confronto_scala_logaritmica", False)
+    create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name, save, "Inserimento_Confronto_scala_logaritmica")
     
     x_values_expanded = [
         x_linear,
@@ -119,7 +112,7 @@ def process_plots(save, type, suffix = ""):
         [y_comparison, "Funzione", "black"]
     ]
 
-    create_multiple_function_plot(x_values_expanded, y_values_expanded, "Confronto tra " + title_name + " con Stima asintotica", save, test_prefix + "_Confronto_scala_logaritmica", False)
+    create_multiple_function_plot(x_values_expanded, y_values_expanded, "Confronto tra " + title_name + " con Stima asintotica", save, test_prefix + "_Confronto_scala_logaritmica")
 
     create_bar_plot(x_values, y_values, "Confronto tra " + title_name, 0.27, save, "Inserimento_Confronto_barre_scala_logaritmica")
 
@@ -238,9 +231,9 @@ def search_experiments(m, m_q, iter, interval, verbose, type: search_test_type, 
     end = timer()
 
 
-    save_on_file(xlinear, ylinear, "Risultati/" + prefix +"_Lineare" + suffix + ".txt")
-    save_on_file(xquadratic, yquadratic, "Risultati/" + prefix +"_Quadratico" + suffix + ".txt")
-    save_on_file(xdouble, ydouble, "Risultati/" + prefix + "_Doppio" + suffix + ".txt")
+    save_on_file(xlinear, ylinear, prefix +"_Lineare" + suffix + ".txt")
+    save_on_file(xquadratic, yquadratic,  prefix +"_Quadratico" + suffix + ".txt")
+    save_on_file(xdouble, ydouble, + prefix + "_Doppio" + suffix + ".txt")
 
     return end - start
 
@@ -272,7 +265,7 @@ def insert_experiments(m, m_q, iter, interval, verbose,  suffix = ""):
     return end - start
 
 def save_on_file(x, y, file_name):
-    file = open(file_name, "w")
+    file = open("Risultati/" + file_name, "w")
     file.write("x = " + str(x) + "\n")
     file.write("y = " + str(y) + "\n")
     file.close()
@@ -284,7 +277,7 @@ def load_from_file(file_name):
         "y" : []
     }
 
-    file = open(file_name, "r")
+    file = open("Risultati/" + file_name, "r")
     data = file.readlines()
     for i in range(len(data)):
         array = data[i]
@@ -314,3 +307,15 @@ def closest_two_power(x: int):
         res = next
         next *= 2
     return res
+
+
+def get_title_name(type: test_type) -> str:
+    title_name = ""
+
+    if(type == test_type.Success):
+        title_name = "Ricerca con Successo"
+    elif(type == test_type.Fail):
+        title_name = "Ricerca con Insuccesso"    
+    elif(type == test_type.Insert):
+        title_name = "Inserimento"
+    return title_name

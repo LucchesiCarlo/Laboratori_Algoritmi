@@ -9,13 +9,11 @@ def create_function_plot(x, y, title, label, color, save, file_name = "", annota
         plt.annotate(text = "%.2f" % (y[-1]), xy = (x[-1], y[-1]), xytext=(x[-1] * 0.9, y[-1] * 0.8))
     generate_plot(save, file_name)
 
-def create_multiple_function_plot(x_values, y_values, title, save, file_name = "", annotate = True, isLog = True):
+def create_multiple_function_plot(x_values, y_values, title, save, file_name = "", isLog = True):
     setup_plot("Fattore di Caricamento", "Tempo (ms)", title, isLog)
     for i in range(len(y_values)):
         x ,y = x_values[i], y_values[i][0]
         plt.plot(x, y, color = y_values[i][2], marker = "o", markersize = 2, label = y_values[i][1])
-        if(annotate):
-            plt.annotate(text = "%.2f" % (y[-1]), xy = (x[-1], y[-1]), xytext=(x[-1] * 0.9, y[-1] * 0.8))
     generate_plot(save, file_name)
 
 def create_bar_plot(x_values, y_values, title, width, save = False, file_name = "", indexes = [i/10 for i in range(10)],isLog = True):
