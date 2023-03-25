@@ -1,6 +1,8 @@
 
 from enum import IntEnum
 
+#https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters
+#Riferimenti per la codicia ANSI
 
 class graphic(IntEnum):
     Normal = 0
