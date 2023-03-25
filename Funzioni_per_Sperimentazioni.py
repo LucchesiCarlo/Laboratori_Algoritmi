@@ -131,8 +131,10 @@ In questo esperimento adremo a verificare il funzionamento di una tabella hash
 con eplorazione lineare.
 """
 def search_test(hash: open_hash, type: search_test_type, iterations: int = 1, interval:int= 1, verbose: bool = False, percent: float = 10):
+
     message = "Stato Test: "
     print(message)
+
     inserted_elements = []
     times = []
     load_factors = []
@@ -175,11 +177,14 @@ def search_test(hash: open_hash, type: search_test_type, iterations: int = 1, in
     if (verbose):
         gotoUp(len(message) + 1)
         erase_line()
-        print("Test conclusi")
+        print_formatted("Test conclusi", color.Green, graphic.Bold)
 
     return (load_factors, times)
 
 def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose: bool = False, percent: float = 10):
+
+    message = "Stato Test: "
+    print(message)
 
     times = []
     load_factors = []
@@ -207,9 +212,14 @@ def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose:
 
         not_inserted_elements.remove(x)
         if(verbose and i % milestone == 0):
+            gotoUp(len(message) + 1)
+            erase_line()
             print(i / milestone * percent, "% Test completati.")
+
     if (verbose):
-        print("Test conclusi")
+        gotoUp(len(message) + 1)
+        erase_line()
+        print_formatted("Test conclusi", color.Green, graphic.Bold)
 
     return (load_factors, times)
 

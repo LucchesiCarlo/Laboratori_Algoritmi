@@ -1,4 +1,23 @@
 
+from enum import IntEnum
+
+
+class graphic(IntEnum):
+    Normal = 0
+    Bold = 1
+    Italic = 3
+    Underline = 4 
+
+
+class color(IntEnum):
+    Black = 30
+    Red = 31
+    Green = 32
+    Yellow = 33
+    Blue = 34
+    BrightRed = 91
+
+
 def erase_line():
     print("\33[K", end = "")
 
@@ -8,3 +27,15 @@ def gotoXY(x, y):
 def gotoUp(y):
     print("\33[1F", end = "")
     print("\33[%dG" % (y), end = "")
+
+def format_text(color, graphic = graphic.Normal):
+    print("\33[%dm" % (graphic), end = "")
+    print("\33[%dm" % (color), end = "")
+
+def print_formatted(text, color, graphic = graphic.Normal, end = "\n"):
+    format_text(color, graphic)
+    print(text, end = end)
+    reset_format()
+
+def reset_format():
+    print("\33[m", end = "")
