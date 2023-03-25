@@ -11,24 +11,24 @@ from Funzioni_per_Sperimentazioni import test_type
 
 #Numero primo 16381
 #TODO Cambiare 16381. Il fatto che sia troppo vicino ad una potenza esatta del 2 da problemi.
-m = 997
+m = 10007
 iter = 500
 interval = 10
-verbose = False
+verbose = True
 save = False
 
 print("Esperiementi sulla ricerca con successo.")
-execute_test(m, closest_two_power(m), iter, interval, verbose, save, test_type.Success)
+execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Success)
 process_plots(save, test_type.Success)
 print("==================================================")
 
 print("Esperiementi sulla ricerca con insuccesso.")
-execute_test(m, closest_two_power(m), iter, interval, verbose, save, test_type.Fail)
+execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Fail)
 process_plots(save, test_type.Fail)
 print("==================================================")
 
 print("Esperiementi sull'inserimento.")
-execute_test(m, closest_two_power(m), iter, interval, verbose, save, test_type.Insert)
+execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Insert)
 process_plots(save, test_type.Insert)
 
 plt.show()
