@@ -309,6 +309,29 @@ def closest_two_power(x: int):
     return res
 
 
+def get_prefix_name(type: test_type) -> str:
+    prefix_name = ""
+
+    if(type == test_type.Success):
+        prefix_name = "Successo"
+    elif(type == test_type.Fail):
+        prefix_name = "Insuccesso"    
+    elif(type == test_type.Insert):
+        prefix_name = "Inserimento"
+    return prefix_name
+
+
+def get_exploration_name(type: hash_type) -> str:
+    exploration_name = ""
+
+    if(type == hash_type.Linear):
+        exploration_name = "Lineare"
+    elif(type == hash_type.Quadratic):
+        exploration_name = "Quadratico"    
+    elif(type == hash_type.Double):
+        exploration_name = "Doppio"
+    return exploration_name
+
 def get_title_name(type: test_type) -> str:
     title_name = ""
 

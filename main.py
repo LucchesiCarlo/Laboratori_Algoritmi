@@ -19,7 +19,7 @@ def main_test(m, iter, interval, verbose, save):
     process_plots(save, test_type.Insert)
 
 
-def test_linear_different_coefficent(m: int, c_1: int, c_2: int, iter: int, interval: int, verbose: bool, type: test_type, suffix: str = ""):
+def test_linear_different_coefficent(m: int, c_1: int, c_2: int, iter: int, interval: int, verbose: bool, test: test_type, suffix: str = ""):
 
     hash_c_1 = open_hash(m, hash_type.Linear, c_1)
     hash_c_2 = open_hash(m, hash_type.Linear, c_2)
@@ -29,42 +29,32 @@ def test_linear_different_coefficent(m: int, c_1: int, c_2: int, iter: int, inte
     c_2_load = []
     c_2_times = []
 
-    prefix = ""
+    prefix = get_prefix_name(test)
 
-    if(type == test_type.Success):
-        prefix = "Successo"
+    if(test == test_type.Success):
         c_1_load, c_1_times = search_test(hash_c_1, test_type.Success, iter, interval, verbose)
         c_2_load, c_2_times = search_test(hash_c_2, test_type.Success, iter, interval, verbose)
-    elif(type == test_type.Fail):
-        prefix = "Insuccesso"
+    elif(test == test_type.Fail):
         c_1_load, c_1_times = search_test(hash_c_1, test_type.Fail, iter, interval, verbose)
         c_2_load, c_2_times = search_test(hash_c_2, test_type.Fail, iter, interval, verbose)
-    elif(type == test_type.Insert):
-        prefix = "Inserimento"
+    elif(test == test_type.Insert):
         c_1_load, c_1_times = insert_test(hash_c_1, iter, interval, verbose)
         c_2_load, c_2_times = insert_test(hash_c_2, iter, interval, verbose)
 
-    save_on_file(c_1_load, c_1_times, prefix + "_Lineare_%d" % (c_1) + suffix)
-    save_on_file(c_2_load, c_2_times, prefix + "_Lineare_%d" % (c_2) + suffix)
+    save_on_file(c_1_load, c_1_times, prefix + "_Lineare_c_%d" % (c_1) + suffix)
+    save_on_file(c_2_load, c_2_times, prefix + "_Lineare_c_%d" % (c_2) + suffix)
 
-def plot_test_linear_different_coefficent(c_1: int, c_2: int,save: bool, type: test_type, suffix: str = ""):
+def plot_test_linear_different_coefficent(c_1: int, c_2: int,save: bool, test: test_type, suffix: str = ""):
 
-    prefix = ""
-
-    if(type == test_type.Success):
-        prefix = "Successo"
-    elif(type == test_type.Fail):
-        prefix = "Insuccesso"
-    elif(type == test_type.Insert):
-        prefix = "Inserimento"
+    prefix = get_prefix_name(test)
     
-    c_1_load, c_1_times = load_from_file(prefix + "_Lineare_%d" % (c_1) + suffix)
-    c_2_load, c_2_times = load_from_file(prefix + "_Lineare_%d" % (c_2) + suffix) 
+    c_1_load, c_1_times = load_from_file(prefix + "_Lineare_c_%d" % (c_1) + suffix)
+    c_2_load, c_2_times = load_from_file(prefix + "_Lineare_c_%d" % (c_2) + suffix) 
 
-    title_name = get_title_name(type)
+    title_name = get_title_name(test)
     
-    create_function_plot(c_1_load, c_1_times, title_name + " Lineare (coefficente %d)" % (c_1), str(c_1), "red", save, prefix + "_Lineare_%d_scala_logaritmica" % (c_1) + suffix)
-    create_function_plot(c_2_load, c_2_times, title_name + " Lineare (coefficente %d)" % (c_2), str(c_1), "green", save, prefix + "_Lineare_%d_scala_logaritmica" % (c_2) + suffix)
+    create_function_plot(c_1_load, c_1_times, title_name + " Lineare (coefficente %d)" % (c_1), str(c_1), "red", save, prefix + "_Lineare_c%d_scala_logaritmica" % (c_1) + suffix)
+    create_function_plot(c_2_load, c_2_times, title_name + " Lineare (coefficente %d)" % (c_2), str(c_2), "green", save, prefix + "_Lineare_c%d_scala_logaritmica" % (c_2) + suffix)
 
     x_values = [
         c_1_load,
@@ -76,7 +66,67 @@ def plot_test_linear_different_coefficent(c_1: int, c_2: int,save: bool, type: t
         [c_2_times, str(c_2), "green"],
     ]
 
-    create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name + " Lineare", save, prefix + "_Confronto_Lineare_%d_%d_scala_logaritmica" % (c_1, c_2) + suffix)
+    create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name + " Lineare", save, prefix + "_Confronto_Lineare_c%d_c%d_scala_logaritmica" % (c_1, c_2) + suffix)
+
+def test_different_dimensions(m_1: int, m_2: int, iter: int, interval: int, verbose: bool, hash: hash_type, test: test_type, suffix: str = ""):
+
+    hash_m_1 = 0
+    hash_m_2 = 0
+
+    if(hash == hash_type.Quadratic):
+        hash_m_1 = open_hash(m_1, hash_type.Quadratic, 0.5, 0.5)
+        hash_m_2 = open_hash(m_2, hash_type.Quadratic, 0.5, 0.5)
+    else:
+        hash_m_1 = open_hash(m_1, hash)
+        hash_m_2 = open_hash(m_2, hash)
+        
+    m_1_load = []
+    m_1_times = []
+    m_2_load = []
+    m_2_times = []
+
+    prefix = get_prefix_name(test)
+
+    if(test == test_type.Success):
+        m_1_load, m_1_times = search_test(hash_m_1, test_type.Success, iter, interval, verbose)
+        m_2_load, m_2_times = search_test(hash_m_2, test_type.Success, iter, interval, verbose)
+    elif(test == test_type.Fail):
+        m_1_load, m_1_times = search_test(hash_m_1, test_type.Fail, iter, interval, verbose)
+        m_2_load, m_2_times = search_test(hash_m_2, test_type.Fail, iter, interval, verbose)
+    elif(test == test_type.Insert):
+        m_1_load, m_1_times = insert_test(hash_m_1, iter, interval, verbose)
+        m_2_load, m_2_times = insert_test(hash_m_2, iter, interval, verbose)
+
+    exploration = get_exploration_name(hash)
+
+    save_on_file(m_1_load, m_1_times, prefix + "_" + exploration + "_d_%d" % (m_1) + suffix)
+    save_on_file(m_2_load, m_2_times, prefix + "_" + exploration + "_d_%d" % (m_2) + suffix)
+
+def plot_test_different_dimensions(m_1: int, m_2: int, save: bool, hash: hash_type, test: test_type, suffix: str = ""):
+
+    prefix = get_prefix_name(test)
+    exploration = get_exploration_name(hash)
+    title_name = get_title_name(test)
+    
+    m_1_load, m_1_times = load_from_file(prefix + "_" + exploration + "_d_%d" % m_1 + suffix)
+    m_2_load, m_2_times = load_from_file(prefix + "_" + exploration + "_d_%d" % m_2 + suffix) 
+
+    title_name = get_title_name(test)
+    
+    create_function_plot(m_1_load, m_1_times, title_name + " " + exploration + " (dimensione %d)" % m_1, str(m_1), "red", save, prefix + "_" + exploration + "_d%d_scala_logaritmica" % m_1 + suffix)
+    create_function_plot(m_2_load, m_2_times, title_name + " " + exploration + " (dimensione %d)" % m_2, str(m_2), "green", save, prefix + "_" + exploration + "_d%d_scala_logaritmica" % m_2 + suffix)
+
+    x_values = [
+        m_1_load,
+        m_2_load,
+    ]
+
+    y_values = [
+        [m_1_times, str(m_1), "red"],
+        [m_2_times, str(m_2), "green"],
+    ]
+
+    create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name + " " + exploration, save, prefix + "_Confronto_" + exploration + "_d%d_d%d_scala_logaritmica" % (m_1, m_2) + suffix)
 
 if (__name__ == "__main__"):
     #Si è scelto il numero primo 24571 in quanto è un numero di considerevoli dimensioni, e si 
@@ -84,13 +134,16 @@ if (__name__ == "__main__"):
 
     #Numero primo 24571
 
-    m = 997
+    m_1 = 997
+    m_2 = 10007
     iter = 500
-    interval = 10
-    verbose = False
+    interval = 50
+    verbose = True
     save = False
 
-    #main_test(m, iter, interval, verbose, save)
-    test_linear_different_coefficent(m, 1, 5, iter, interval, verbose, test_type.Success)
-    plot_test_linear_different_coefficent(1, 5, save, test_type.Success)
+    #main_test(m_1, iter, interval, verbose, save)
+    #test_linear_different_coefficent(m_1, 1, 5, iter, interval, verbose, test_type.Success)
+    #plot_test_linear_different_coefficent(1, 5, save, test_type.Success)
+    test_different_dimensions(m_1, m_2, iter, interval, verbose, hash_type.Linear, test_type.Fail, "_suffisso")
+    plot_test_different_dimensions(m_1, m_2, save, hash_type.Linear, test_type.Fail, "_suffisso")
     plt.show()
