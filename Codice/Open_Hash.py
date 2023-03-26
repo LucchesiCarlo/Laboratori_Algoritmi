@@ -36,7 +36,7 @@ class open_hash(object):
         for i in range(0, length):
             #L'elemento NIL indica che non è presente nessun dato in questa cella
             self.array.append("NIL")
-        self.__hash_type = type
+        self.hash_type = type
         self.__c1 = c1
         self.__c2 = c2
 
@@ -99,15 +99,34 @@ class open_hash(object):
             
     def load_factor(self):
         return float(self.__elements) / self.M
+    
+    def undo_element(self, x: int):
+        """
+        Questo metodo serve per permettere di rimuovere un elemento dalla tabella hash inserendo 
+        un NIL invece di un DEL. E' utilie in quanto per i nostri eperiemnti abbiamo bisogno di 
+        una tabella hash su cui non sono state fatte rimozioni. ATTENZIONE: la tabella hash continua 
+        a funzionare correttamente solo se x è stato l'ultimo elemento inserito.
+        """
+        key = 0
+        i = 0
+        while(True):
+            key = self.__calculate_hash(x, i)
+            i+= 1
+            if(self.array[key] == x):
+                self.array[key] = "NIL"
+                self.__elements -= 1
+                return key
+            if(i == self.M or self.array[key] == "NIL"):
+                return "NIL"
 
     #Questo metodo serve per raggruppare il codice che identifica la funzione hash da usare
     def __calculate_hash(self, x: int, i: int) -> int:
         key = 0
-        if(self.__hash_type == hash_type.Linear):
+        if(self.hash_type == hash_type.Linear):
             key = self.__linear_probing(x, i)
-        elif(self.__hash_type == hash_type.Quadratic):
+        elif(self.hash_type == hash_type.Quadratic):
             key = self.__quadratic_probing(x, i)
-        elif(self.__hash_type == hash_type.Double):
+        elif(self.hash_type == hash_type.Double):
             key = self.__double_probing(x, i)
         else:
             raise Exception("E' stata chiamata una funzione hash che non esiste.")

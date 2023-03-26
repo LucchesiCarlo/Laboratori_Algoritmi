@@ -5,17 +5,17 @@ from Funzioni_per_Sperimentazioni import *
 
 def main_test(m, iter, interval, verbose, save):
     print("Esperiementi sulla ricerca con successo.")
-    execute_test(m, closest_two_power(m), iter, interval, verbose, save, test_type.Success)
+    execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Success)
     process_plots(save, test_type.Success)
     print("==================================================")
 
     print("Esperiementi sulla ricerca con insuccesso.")
-    execute_test(m, closest_two_power(m), iter, interval, verbose, save, test_type.Fail)
+    execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Fail)
     process_plots(save, test_type.Fail)
     print("==================================================")
 
     print("Esperiementi sull'inserimento.")
-    execute_test(m, closest_two_power(m), iter, interval, verbose, save, test_type.Insert)
+    execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Insert)
     process_plots(save, test_type.Insert)
 
 
@@ -144,6 +144,11 @@ if (__name__ == "__main__"):
     #main_test(m_1, iter, interval, verbose, save)
     #test_linear_different_coefficent(m_1, 1, 5, iter, interval, verbose, test_type.Success)
     #plot_test_linear_different_coefficent(1, 5, save, test_type.Success)
-    test_different_dimensions(m_1, m_2, iter, interval, verbose, hash_type.Linear, test_type.Fail, "_suffisso")
-    plot_test_different_dimensions(m_1, m_2, save, hash_type.Linear, test_type.Fail, "_suffisso")
+    #test_different_dimensions(m_1, m_2, iter, interval, verbose, hash_type.Linear, test_type.Fail, "_suffisso")
+    #plot_test_different_dimensions(m_1, m_2, save, hash_type.Linear, test_type.Fail, "_suffisso")
+
+    hash = open_hash(m_1, hash_type.Linear)
+    print(load_factor_experiments(hash, 0.8, 1000, test_type.Insert))
+
+
     plt.show()

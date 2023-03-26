@@ -173,7 +173,7 @@ def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose:
     load_factors = []
 
     #Inoltre qui si farà la ricerca di soli valori presenti.
-    not_inserted_elements = list(range(0, hash.M * 10))
+    not_inserted_elements = list(range(hash.M * 10))
 
     milestone = math.ceil(hash.M / 100 * percent)
     for i in range(hash.M):
@@ -182,7 +182,7 @@ def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose:
         if((i - (hash.M - 1) % interval) % interval == 0):
             final_time = 0
             for j in range(iterations):
-                hash.delete(x)
+                hash.undo_element(x)
                 x = random.choice(not_inserted_elements)
                 time_start = timer()
                 hash.insert(x)
@@ -231,9 +231,9 @@ def search_experiments(m, m_q, iter, interval, verbose, type: search_test_type, 
     end = timer()
 
 
-    save_on_file(xlinear, ylinear, prefix +"_Lineare" + suffix + ".txt")
-    save_on_file(xquadratic, yquadratic,  prefix +"_Quadratico" + suffix + ".txt")
-    save_on_file(xdouble, ydouble, + prefix + "_Doppio" + suffix + ".txt")
+    save_on_file(xlinear, ylinear, prefix + "_Lineare" + suffix + ".txt")
+    save_on_file(xquadratic, yquadratic,  prefix + "_Quadratico" + suffix + ".txt")
+    save_on_file(xdouble, ydouble, prefix + "_Doppio" + suffix + ".txt")
 
     return end - start
 
@@ -258,11 +258,31 @@ def insert_experiments(m, m_q, iter, interval, verbose,  suffix = ""):
 
     end = timer()
 
-    save_on_file(xlinear, ylinear, "Risultati/Inserimento_Lineare" + suffix + ".txt")
-    save_on_file(xquadratic, yquadratic, "Risultati/Inserimento_Quadratico" + suffix + ".txt")
-    save_on_file(xdouble, ydouble, "Risultati/Inserimento_Doppio" + suffix + ".txt")
+    save_on_file(xlinear, ylinear, "Inserimento_Lineare" + suffix + ".txt")
+    save_on_file(xquadratic, yquadratic, "Inserimento_Quadratico" + suffix + ".txt")
+    save_on_file(xdouble, ydouble, "Inserimento_Doppio" + suffix + ".txt")
 
     return end - start
+
+def load_factor_experiments(hash: open_hash, a: float, iter: int, type: test_type, suffix: str = ""):
+
+    not_inserter = list(range(10 * hash.M))
+    time = 0
+
+    while(hash.load_factor() < a):
+        x = random.choice(not_inserter)
+        hash.insert(x)
+        not_inserter.remove(x)
+
+    for i in range(iter):
+        x = random.choice(not_inserter)
+        start = timer()
+        hash.insert(x)
+        end = timer()
+        time += end - start
+        hash.undo_element(x)
+
+    return (time / iter) * 1000
 
 def save_on_file(x, y, file_name):
     file = open("Risultati/" + file_name, "w")
