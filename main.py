@@ -6,17 +6,17 @@ from Funzioni_per_Sperimentazioni import *
 from Fancy_Output import *
 
 def main_test(m, iter, interval, verbose, save):
-    print("Esperiementi sulla ricerca con successo.")
+    print_formatted("Esperiementi sulla ricerca con successo.", color.Blue)
     execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Success)
     process_plots(save, test_type.Success)
     print("==================================================")
 
-    print("Esperiementi sulla ricerca con insuccesso.")
+    print_formatted("Esperiementi sulla ricerca con insuccesso.", color.Blue)
     execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Fail)
     process_plots(save, test_type.Fail)
     print("==================================================")
 
-    print("Esperiementi sull'inserimento.")
+    print_formatted("Esperiementi sull'inserimento.", color.Blue)
     execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Insert)
     process_plots(save, test_type.Insert)
 
@@ -131,6 +131,7 @@ def plot_test_different_dimensions(m_1: int, m_2: int, save: bool, hash: hash_ty
     create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name + " " + exploration, save, prefix + "_Confronto_" + exploration + "_d%d_d%d_scala_logaritmica" % (m_1, m_2) + suffix)
 
 def test_load_factor(m: int, type: test_type, iter: int, verbose: bool, suffix: str = ""):
+    message = "Stato test:"
     prefix = get_prefix_name(type)
 
     hash_linear = open_hash(m, hash_type.Linear)
@@ -139,13 +140,21 @@ def test_load_factor(m: int, type: test_type, iter: int, verbose: bool, suffix: 
 
     times = [[0 for j in range(3)] for i in range(11)]
     
+    if(verbose):
+        print(message)
+        
     for i in range(11):
         a = i / 10.
         times [i][0] = load_factor_experiments(hash_linear, a, iter, type)
         times [i][1] = load_factor_experiments(hash_quadratic, a, iter, type)
         times [i][2] = load_factor_experiments(hash_double, a, iter, type)
         if(verbose):
-            print("%.2f%% Test completati." % (i * 10))
+            gotoUp(len(message) + 1)
+            erase_line()
+            if(i != 10):
+                print("%.2f%% Test completati." % (i * 10))
+            else:
+                print_formatted("Test completati.", color.Green, graphic.Bold)
     
     file = open("Risultati/" + prefix + "_Fattori_Caricamento" + suffix + ".txt", "w")
 
@@ -198,18 +207,27 @@ if (__name__ == "__main__"):
         main_test(m_1, iter, interval, verbose, save)
 
     if(test_list[1] == 1):
+        print_formatted("Test di esplorazione Lineare con coefficienti diversi", color.Blue)
         test_linear_different_coefficent(m_1, 1, 5, iter, interval, verbose, test_type.Success)
         plot_test_linear_different_coefficent(1, 5, save, test_type.Success)
+        print("==================================================")
 
     if(test_list[2] == 1):
+        print_formatted("Test con dimensioni diverse", color.Blue)
         test_different_dimensions(m_1, m_2, iter, interval, verbose, hash_type.Linear, test_type.Fail, "_suffisso")
         plot_test_different_dimensions(m_1, m_2, save, hash_type.Linear, test_type.Fail, "_suffisso")
+        print("==================================================")
 
     if(test_list[3] == 1):
         iter_2 = 1000
-        print()
+        print_formatted("Test sui fattori di caricamento Successo", color.Blue)
         test_load_factor(m_1, test_type.Success, verbose, iter_2)
+        print("==================================================")
+        print_formatted("Test sui fattori di caricamento Insuccesso", color.Blue)
         test_load_factor(m_1, test_type.Fail, verbose, iter_2)
+        print("==================================================")
+        print_formatted("Test sui fattori di caricamento Inserimento", color.Blue)
         test_load_factor(m_1, test_type.Insert, verbose, iter_2)
+        print("==================================================")
 
     plt.show()
