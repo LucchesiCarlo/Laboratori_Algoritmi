@@ -3,6 +3,8 @@ from matplotlib import pyplot as plt
 from Codice.Open_Hash import *
 from Funzioni_per_Sperimentazioni import *
 
+from Fancy_Output import *
+
 def main_test(m, iter, interval, verbose, save):
     print("Esperiementi sulla ricerca con successo.")
     execute_test(m, closest_two_power(m), iter, interval, verbose, test_type.Success)

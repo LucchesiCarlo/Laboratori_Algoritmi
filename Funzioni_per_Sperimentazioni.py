@@ -1,6 +1,8 @@
 import random
 import math
 from timeit import default_timer as timer
+
+from Fancy_Output import *
 from Funzioni_per_Grafici import *
 
 from Codice.Open_Hash import *
@@ -117,13 +119,14 @@ def process_plots(save, type, suffix = ""):
     create_bar_plot(x_values, y_values, "Confronto tra " + title_name, 0.27, save, "Inserimento_Confronto_barre_scala_logaritmica")
 
 
-
-
 """
 In questo esperimento adremo a verificare il funzionamento di una tabella hash 
 con eplorazione lineare.
 """
 def search_test(hash: open_hash, type: search_test_type, iterations: int = 1, interval:int= 1, verbose: bool = False, percent: float = 10):
+
+    message = "Stato Test: "
+    print(message)
 
     inserted_elements = []
     times = []
@@ -161,13 +164,20 @@ def search_test(hash: open_hash, type: search_test_type, iterations: int = 1, in
             load_factors.append(hash.load_factor())
 
         if(verbose and i % milestone == 0):
+            gotoUp(len(message) + 1)
+            erase_line()
             print(i / milestone * percent, "% Test completati.")
     if (verbose):
-        print("Test conclusi")
+        gotoUp(len(message) + 1)
+        erase_line()
+        print_formatted("Test conclusi", color.Green, graphic.Bold)
 
     return (load_factors, times)
 
 def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose: bool = False, percent: float = 10):
+
+    message = "Stato Test: "
+    print(message)
 
     times = []
     load_factors = []
@@ -195,9 +205,14 @@ def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose:
 
         not_inserted_elements.remove(x)
         if(verbose and i % milestone == 0):
+            gotoUp(len(message) + 1)
+            erase_line()
             print(i / milestone * percent, "% Test completati.")
+
     if (verbose):
-        print("Test conclusi")
+        gotoUp(len(message) + 1)
+        erase_line()
+        print_formatted("Test conclusi", color.Green, graphic.Bold)
 
     return (load_factors, times)
 
