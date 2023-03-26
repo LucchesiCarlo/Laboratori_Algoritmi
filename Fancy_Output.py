@@ -35,9 +35,7 @@ def format_text(color, graphic = graphic.Normal):
     print("\33[%dm" % (color), end = "")
 
 def print_formatted(text, color, graphic = graphic.Normal, end = "\n"):
-    format_text(color, graphic)
-    print(text, end = end)
-    reset_format()
+    print("\33[%dm" % (graphic), "\33[%dm" % (color), text, "\33[m", end = end, sep = "")
 
 def reset_format():
     print("\33[m", end = "")
