@@ -142,7 +142,7 @@ def test_load_factor(m: int, type: test_type, iter: int, verbose: bool, suffix: 
     
     if(verbose):
         print(message)
-        
+
     for i in range(11):
         a = i / 10.
         times [i][0] = load_factor_experiments(hash_linear, a, iter, type)
@@ -201,7 +201,7 @@ if (__name__ == "__main__"):
     iter = 500
     interval = 50
     verbose = True
-    save = False
+    save = True
 
     if(test_list[0] == 1):
         main_test(m_1, iter, interval, verbose, save)

@@ -96,9 +96,9 @@ def process_plots(save, type, suffix = ""):
 
     setup_plot("Fattore di Caricamento ", "Tempo Asintotico ", title_name + " Stima Asintotica")
     plt.plot(x_comparison, y_comparison, "ko-", markersize = 2, label="Funzione")
-    generate_plot(save, "Inserimento_Asintotica_scala_logaritmica")
+    generate_plot(save, test_prefix + "_Asintotica_scala_logaritmica")
 
-    create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name, save, "Inserimento_Confronto_scala_logaritmica")
+    create_multiple_function_plot(x_values, y_values, "Confronto tra " + title_name, save, test_prefix + "_Confronto_scala_logaritmica")
     
     x_values_expanded = [
         x_linear,
@@ -114,9 +114,9 @@ def process_plots(save, type, suffix = ""):
         [y_comparison, "Funzione", "black"]
     ]
 
-    create_multiple_function_plot(x_values_expanded, y_values_expanded, "Confronto tra " + title_name + " con Stima asintotica", save, test_prefix + "_Confronto_scala_logaritmica")
+    create_multiple_function_plot(x_values_expanded, y_values_expanded, "Confronto tra " + title_name + " con Stima asintotica", save, test_prefix + "_Confronto_Asintotico_scala_logaritmica")
 
-    create_bar_plot(x_values, y_values, "Confronto tra " + title_name, 0.27, save, "Inserimento_Confronto_barre_scala_logaritmica")
+    create_bar_plot(x_values, y_values, "Confronto tra " + title_name, 0.27, save, test_prefix + "_Confronto_barre_scala_logaritmica")
 
 
 """
