@@ -266,21 +266,46 @@ def insert_experiments(m, m_q, iter, interval, verbose,  suffix = ""):
 
 def load_factor_experiments(hash: open_hash, a: float, iter: int, type: test_type, suffix: str = ""):
 
-    not_inserter = list(range(10 * hash.M))
-    time = 0
-
-    while(hash.load_factor() < a):
-        x = random.choice(not_inserter)
+    not_inserted = list(range(10 * hash.M))
+    inserted = []
+    x = 0
+    if(hash.load_factor() != 0):
+        for i in hash.array:
+            if(i != "NIL"):
+                not_inserted.remove(i)
+                inserted.append(i)
+    else:
+        x = random.choice(not_inserted)
         hash.insert(x)
-        not_inserter.remove(x)
+        inserted.append(x)
+        not_inserted.remove(x)
+
+    time = 0
+    while(hash.load_factor() < a and hash.load_factor() != 1):
+        x = random.choice(not_inserted)
+        hash.insert(x)
+        not_inserted.remove(x)
+        inserted.append(x)
+
 
     for i in range(iter):
-        x = random.choice(not_inserter)
-        start = timer()
-        hash.insert(x)
-        end = timer()
+        if(type == test_type.Success):
+            x = random.choice(inserted)
+            start = timer()
+            hash.search(x)
+            end = timer()
+        elif(type == test_type.Fail):
+            x = random.choice(not_inserted)
+            start = timer()
+            hash.search(x)
+            end = timer()
+        elif(type == test_type.Insert):
+            hash.undo_element(x)
+            x = random.choice(not_inserted)
+            start = timer()
+            hash.insert(x)
+            end = timer()
         time += end - start
-        hash.undo_element(x)
 
     return (time / iter) * 1000
 
