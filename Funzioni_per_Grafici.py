@@ -2,15 +2,15 @@ import math
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 
-def create_function_plot(x, y, title, label, color, save, file_name = "", annotate = True, isLog = True):
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", title, isLog)
+def create_function_plot(x, y, title, label, color, save, file_name = "", annotate = True, isLog = True, x_name: str = "Fattore di Caricamento"):
+    setup_plot(x_name, "Tempo (ms)", title, isLog)
     plt.plot(x, y, color = color, marker = "o", markersize = 2, label = label)
     if(annotate):
         plt.annotate(text = "%.2f" % (y[-1]), xy = (x[-1], y[-1]), xytext=(x[-1] * 0.9, y[-1] * 0.8))
     generate_plot(save, file_name)
 
-def create_multiple_function_plot(x_values, y_values, title, save, file_name = "", isLog = True):
-    setup_plot("Fattore di Caricamento", "Tempo (ms)", title, isLog)
+def create_multiple_function_plot(x_values, y_values, title, save, file_name = "", isLog = True, x_name: str = "Fattore di Caricamento"):
+    setup_plot(x_name, "Tempo (ms)", title, isLog)
     for i in range(len(y_values)):
         x ,y = x_values[i], y_values[i][0]
         plt.plot(x, y, color = y_values[i][2], marker = "o", markersize = 2, label = y_values[i][1])

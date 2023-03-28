@@ -196,10 +196,11 @@ if (__name__ == "__main__"):
         exit()
 
 
-    m_1 = 997
-    m_2 = 10007
-    iter = 500
-    interval = 50
+    m_1 = 24571
+    m_2 = 16381
+    iter = 1000
+    iter_2 = 2000
+    interval = 250
     verbose = True
     save = True
 
@@ -219,7 +220,6 @@ if (__name__ == "__main__"):
         print("==================================================")
 
     if(test_list[3] == 1):
-        iter_2 = 1000
         print_formatted("Test sui fattori di caricamento Successo", color.Blue)
         test_load_factor(m_1, test_type.Success, verbose, iter_2)
         print("==================================================")

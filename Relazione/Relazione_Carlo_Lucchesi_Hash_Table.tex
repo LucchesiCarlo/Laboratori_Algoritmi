@@ -199,11 +199,9 @@ Dato che il clustering primario si verifica in molti più casi rispetto al secon
 
 \subsection{Configurazione Preliminare}
 
-\begin{Huge}
-TODO.
-\end{Huge}
+La dimensione delle tabelle hash per gli esperimenti principali per l'esplorazione quadratica e con hash doppio è di 24571. I motivi che hanno portato alla scelta di questa dimesnione sono molteplitci. Innanzo tutto è un numero primo, quindi per questi due tipi di eplorazioni ci garantisce la generazione di una permutazione degli indici della tabell, e quindi un corretta esecuzione delle operazioni richieste. Inoltre si tratta di un numero che si trova (approsimativamente) nel punto mediano tra 16384 e 32768, che sono le putenze esatte del 2 più vicine a qusto numero, Questa scelta è motivata dalll'intenzione di sceglire una dimensione che si discostasse il più possibile da una potenza esatta del 2 per evitare dell'effetto del campionamento di una porzione di bit particolare. Infine 24571 si tratta di un numero sufficentemente grande per poter svolgere un numero di test soddisfacenti, ma anche di ternminarli in un tempo compatibile alle prestazioni che l'hardware utilizzato riesce ad offrire.
 
-Per quanto invece riguarda l'esplorazione quadratica si fornisce come dimanesione della tabella la potenza esatta del 2 più vicina alla dimensione delle altre tabelle (generato con la funzione \emph{closest\_two\_power}). Questa caratteristica non dovrebbe impattare eccessivamente sulle prestazioni di questa tabella hash, dato che i numeri inseriti sono causali (generati con la funzione \emph{random.choice} su un array di valori non ancora inseriti) e quindi non dovrebbero avere una correlazione di nessun tipo.
+Per quanto invece riguarda l'esplorazione quadratica si fornisce come dimensione della tabella la potenza esatta del 2 più vicina alla dimensione delle altre tabelle (generato con la funzione \emph{closest\_two\_power}). Questa caratteristica non dovrebbe impattare eccessivamente sulle prestazioni di questa tabella hash, dato che i numeri inseriti sono causali (generati con la funzione \emph{random.choice} su un array di valori non ancora inseriti) e quindi non dovrebbero avere una correlazione di nessun tipo.
 
 Per ottimizzare i tempi di esecuzione di questi test si è scelto di non verificare i tempi di inserimento per ogni elemento, ma di campionarli ad in tervalli regolari. Questo da una parte ci permette di ridurre i tempi totali di esecuzione (e quindi potenzialmente lavorare con dimensioni delle tabelle più grosse), ma dall'altra parte mantiene chiaramente visibile l'andamento complessivo (a patto che l'intervallo di campionamento non sia troppo grande).
 
@@ -343,7 +341,7 @@ Come mostarto dai grafici in nella figura \ref{fig:Inserimento_quartetto} possia
 \label{fig:Inserimento_Confronto_asintotico_scala_logaritmica}
 \end{figure}
 
-Invece la figura \ref{fig:Inserimento_Confronto_asintotico_scala_logaritmica} ci permette di apprezzare meglio le differenze tra le varie esplorazioni. Per prima cosa possaimo notare che la funzione di stima asintotica, per quanto normalizzata, non si avvicina molto all'andamento delle altre funzioni. %TODO aggiustare la normalizzazioni.
+Invece la figura \ref{fig:Inserimento_Confronto_asintotico_scala_logaritmica} ci permette di apprezzare meglio le differenze tra le varie esplorazioni. In questo caso l'esplorazioni sebrano seguire l'andamento della stima asintotica per valori di $\alpha$ sufficientemente piccoli, per poi distaccarsi con l'avvicinarsi di 1. Bisogna comunque considereare che la stima asintotica non può essere calcolata nè in 0 nè in 1 per via del suo dominio.
 Come nella ricerca con insuccesso l'eplorazione lineare diventa meno efficente per $\alpha \simeq 0.6$, per poi riallenearsi con la tabella piena.
 
 \begin{figure}[H]
@@ -371,13 +369,28 @@ Possiamo ancora una volta dire come gli aspetti teorici sono stati ragionevolemn
 Come mostrano i garfici messi a confronto nella figura \ref{fig:Confronto_ricerca_insuccesso} (che sono gli stessi rispettivamente di figura \ref{fig:Insuccesso_Confronto_barre_scala_logaritmica} e \ref{fig:Inserimento_Confronto_barre_scala_logaritmica}) che i valori assoluti sono molto simili. Questo perchè i casi in entrambi i casi la sequenza di esplorazione deve essere esplorata finchè non troviamo una cella vuota prima di poter giungere al raggiungimento del risultato. Questo è perticolarmente vero poichè abbiamo supposto che non vengano eliminati nessun elemento, e che quindi non esistano celle marcate come DEL che farebbero terminare prima l'inserimento.
 
 \subsection{Esperimenti sulla dimensione della Tabella}
-\begin{Huge}
-TODO
-\end{Huge}
+Un altro esperimento che possiamo considerare significativo è quello di verificare il comportamento di una esplorazione con una tabella di dimensione diversa. In questo caso la seconda tabella sarà creata con una dimensione pari ad un numero sufficientemente vicino ad una potenza esatta del 2 (ma comunque primo).
+
+Come riportato nella figura \ref{figConfronto_dimensioni} andremo ad nalizzare l'andamento di una esplorazione lineare nel caso dell'insiccesso con dimensione 24571 e 16381 (dove il secondo è il numero primo più vicino alla potenza esatta del 2 16384). Il confronto è possibile in quanto l'andamento con dipende dalla dimensione in modo diretto, ma in funzione del fattore di caricamento della tabella.
+
+\begin{figure}[H]
+\image[0.75]{Insuccesso_Confronto_Lineare_d24571_d16381_scala_logaritmica_suffisso}{Confronto tra operazioni con dimensioni della tabella diverse}
+\label{fig:Confronto_dimensioni}
+\end{figure}
+
+Il risultato mostrato in figura mostra come gli andamenti siano del tutto sovrapponibili. L'unica divverenza si può notare nel caso di $\alpha = 1$, ma come abbiamo precedentemente esposto questo è dovuta al fatto che a tabella piena la ricerca con insuccesso degenera in una lista concatenata.
+
+\subsubsection{Commento}
+Da questo esperimento si evince che nel caso di utilizzo di numeri non correlati da qualche relazione matematica l'utilizzo di una dimensione piuttosto di un'altra non comporta diferenze in termini di prestazioni (a patto che queste garantiscano la generazione di una permutazione delle celle della tabella).
+
 \subsection{Esploraione lineare con coefficenti diversi}
-\begin{Huge}
-TODO
-\end{Huge}
+Un altro test ragionevole è quello sula esplorazione lineare con coefficenti diversi da 1. In questo caso si vuole verificare se l'utilizzo di un coefficente diverso provochi un cambiamento apprezabile nella presatzione della tabella hash.
+
+\begin{figure}[H]
+\image[0.75]{Successo_Confronto_Lineare_c1_c5_scala_logaritmica}{Confronto di esplorazioni lineari di coefficenti diversi}
+\label{fig:Confronto_coefficienti}
+\end{figure}
+
 \subsection{Tempi su caso operativo}
 \begin{Huge}
 TODO
