@@ -13,10 +13,10 @@ class quadratic_hash_usage(unittest.TestCase):
         self.__quadratic_hash.insert(24)
 
     def test_insert(self):
-        self.assertEqual(self.__quadratic_hash.array[6], 6, msg = "Non inserisce correttamente il valore.")
-        self.assertEqual(self.__quadratic_hash.array[3], 3, msg = "Non inserisce correttamente il valore.")
-        self.assertEqual(self.__quadratic_hash.array[4], 10, msg = "L'esplorazione quadratica non funziona.")
-        self.assertEqual(self.__quadratic_hash.array[2], 24, msg = "L'esplorazione quadratica non funziona.")
+        self.assertEqual(self.__quadratic_hash.array[6], "6", msg = "Non inserisce correttamente il valore.")
+        self.assertEqual(self.__quadratic_hash.array[3], "3", msg = "Non inserisce correttamente il valore.")
+        self.assertEqual(self.__quadratic_hash.array[4], "10", msg = "L'esplorazione quadratica non funziona.")
+        self.assertEqual(self.__quadratic_hash.array[2], "24", msg = "L'esplorazione quadratica non funziona.")
 
         with self.assertRaises(ValueError, msg = "Non si accorge che vengono inseriti 2 valori uguali."):
             self.__quadratic_hash.insert(6)

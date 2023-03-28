@@ -13,9 +13,9 @@ class linear_hash_usage(unittest.TestCase):
         self.__linear_hash.insert(10)
 
     def test_insert(self):
-        self.assertEqual(self.__linear_hash.array[6], 6, msg = "Non inserisce correttamente il valore.")
-        self.assertEqual(self.__linear_hash.array[3], 3, msg = "Non inserisce correttamente il valore.")
-        self.assertEqual(self.__linear_hash.array[4], 10, msg = "L'esplorazione lineare non funziona.")
+        self.assertEqual(self.__linear_hash.array[6], "6", msg = "Non inserisce correttamente il valore.")
+        self.assertEqual(self.__linear_hash.array[3], "3", msg = "Non inserisce correttamente il valore.")
+        self.assertEqual(self.__linear_hash.array[4], "10", msg = "L'esplorazione lineare non funziona.")
 
         with self.assertRaises(ValueError, msg = "Non si accorge che vengono inseriti 2 valori uguali."):
             self.__linear_hash.insert(6)
@@ -46,8 +46,8 @@ class different_linear_hash_usage(unittest.TestCase):
 
 
     def test_insert(self):
-        self.assertEqual(self.__new_linear_hash.array[4], 4, msg = "Non inserisce correttamente.")
-        self.assertEqual(self.__new_linear_hash.array[0], 15, msg = "Non segue l'esplorazione lineare.")
+        self.assertEqual(self.__new_linear_hash.array[4], "4", msg = "Non inserisce correttamente.")
+        self.assertEqual(self.__new_linear_hash.array[0], "15", msg = "Non segue l'esplorazione lineare.")
 
     def test_search(self):
         self.assertEqual(self.__new_linear_hash.search(1), "NIL", msg = "Non inizializza correttamente la tavola hash.")

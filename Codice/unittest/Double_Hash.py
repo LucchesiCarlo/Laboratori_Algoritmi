@@ -12,9 +12,9 @@ class double_hash_usage(unittest.TestCase):
         self.__double_hash.insert(10)
 
     def test_insert(self):
-        self.assertEqual(self.__double_hash.array[6], 6, msg = "Non inserisce correttamente il valore.")
-        self.assertEqual(self.__double_hash.array[3], 3, msg = "Non inserisce correttamente il valore.")
-        self.assertEqual(self.__double_hash.array[1], 10, msg = "L'esplorazione doppia non funziona.")
+        self.assertEqual(self.__double_hash.array[6], "6", msg = "Non inserisce correttamente il valore.")
+        self.assertEqual(self.__double_hash.array[3], "3", msg = "Non inserisce correttamente il valore.")
+        self.assertEqual(self.__double_hash.array[1], "10", msg = "L'esplorazione doppia non funziona.")
 
         with self.assertRaises(ValueError, msg = "Non si accorge che vengono inseriti 2 valori uguali."):
             self.__double_hash.insert(6)

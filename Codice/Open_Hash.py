@@ -1,4 +1,5 @@
 from enum import IntEnum
+import numpy as np
 
 """
 Questo file contiene una classe che rappresenta un Hash ad Indirizzamento Aperto.
@@ -30,12 +31,11 @@ class open_hash(object):
         #I valori c1 e c2 sono utilizzati per la generazione dei valori delle seguenze di
         # esplorazione dei vari tipi di funzioni hash.
         #Nel caso di quella lineare il parametro intero c sarà il valore di c1.
-        self.array = []
         if (length <= 0):
             raise ValueError("La lunghezza di un Hash non può essere negativa.")
-        for i in range(0, length):
-            #L'elemento NIL indica che non è presente nessun dato in questa cella
-            self.array.append("NIL")
+        
+        self.array = np.full(length, fill_value = "NIL")
+        
         self.hash_type = type
         self.__c1 = c1
         self.__c2 = c2
@@ -58,7 +58,7 @@ class open_hash(object):
             key = self.__calculate_hash(x, i)
             i+= 1
 
-            if(self.array[key] == x):
+            if(self.array[key] == str(x)):
                 raise ValueError("Non è possibile inserie nello stessa tavola hash 2 valori uguali.")
             if(self.array[key] == "NIL" or self.array[key] == "DEL"):
                self.array[key] = x
@@ -77,7 +77,7 @@ class open_hash(object):
         while(True):
             key = self.__calculate_hash(x, i)
             i+= 1
-            if(self.array[key] == x):
+            if(self.array[key] == str(x)):
                 return key
             if(i == self.M or self.array[key] == "NIL"):
                 return "NIL"
@@ -90,7 +90,7 @@ class open_hash(object):
             key = self.__calculate_hash(x, i)
             i+= 1
 
-            if(self.array[key] == x):
+            if(self.array[key] == str(x)):
                 self.array[key] = "DEL"
                 self.__elements -= 1
                 return True
@@ -112,7 +112,7 @@ class open_hash(object):
         while(True):
             key = self.__calculate_hash(x, i)
             i+= 1
-            if(self.array[key] == x):
+            if(self.array[key] == str(x)):
                 self.array[key] = "NIL"
                 self.__elements -= 1
                 return key
