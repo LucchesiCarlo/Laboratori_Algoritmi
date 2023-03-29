@@ -202,7 +202,7 @@ if (__name__ == "__main__"):
     iter_2 = 2000
     interval = 250
     verbose = True
-    save = True
+    save = False
 
     if(test_list[0] == 1):
         main_test(m_1, iter, interval, verbose, save)

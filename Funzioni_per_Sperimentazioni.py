@@ -119,14 +119,11 @@ def process_plots(save, type, suffix = ""):
     create_bar_plot(x_values, y_values, "Confronto tra " + title_name, 0.27, save, test_prefix + "_Confronto_barre_scala_logaritmica")
 
 
-"""
-In questo esperimento adremo a verificare il funzionamento di una tabella hash 
-con eplorazione lineare.
-"""
 def search_test(hash: open_hash, type: search_test_type, iterations: int = 1, interval:int= 1, verbose: bool = False, percent: float = 10):
 
     message = "Stato Test: "
-    print(message)
+    if(verbose):
+        print(message)
 
     inserted_elements = []
     times = []
@@ -177,7 +174,8 @@ def search_test(hash: open_hash, type: search_test_type, iterations: int = 1, in
 def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose: bool = False, percent: float = 10):
 
     message = "Stato Test: "
-    print(message)
+    if(verbose):
+        print(message)
 
     times = []
     load_factors = []
