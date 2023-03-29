@@ -384,30 +384,83 @@ Il risultato mostrato in figura mostra come gli andamenti siano del tutto sovrap
 Da questo esperimento si evince che nel caso di utilizzo di numeri non correlati da qualche relazione matematica l'utilizzo di una dimensione piuttosto di un'altra non comporta diferenze in termini di prestazioni (a patto che queste garantiscano la generazione di una permutazione delle celle della tabella).
 
 \subsection{Esploraione lineare con coefficenti diversi}
-Un altro test ragionevole è quello sula esplorazione lineare con coefficenti diversi da 1. In questo caso si vuole verificare se l'utilizzo di un coefficente diverso provochi un cambiamento apprezabile nella presatzione della tabella hash.
+Un altro test ragionevole è quello sula esplorazione lineare con coefficenti diversi da 1. In questo caso si vuole verificare se l'utilizzo di un coefficente diverso provochi un cambiamento apprezabile nella presatzione della tabella hash. Il test sarà condotto su una tabella hash con esplorazione lineare (dato che è l'unica con un grado di libertà così altro sul coefficiente da utilizzare) con coeficiente $1$ e $5$.
 
 \begin{figure}[H]
 \image[0.75]{Successo_Confronto_Lineare_c1_c5_scala_logaritmica}{Confronto di esplorazioni lineari di coefficenti diversi}
 \label{fig:Confronto_coefficienti}
 \end{figure}
 
+COme riportato in figura \ref{fig:Confronto_coefficienti} possiamo notare che sostanzialemnte l'endamendo non dipende dal valore del coefficiente utilizzato. Infatti i problemi di clustering primario rimangono con qualsiasi coefficiente.
+
 \subsection{Tempi su caso operativo}
+
+\begin{center}
+\begin{table}[H]
+\begin{tabular}{l|l|l|l|l|l|l|l|l|l|}
+%\hline
+\cline{2-10}
+& \multicolumn{3}{c|}{Prova} & \multicolumn{3}{c|}{Prova} & \multicolumn{3}{c|}{Prova} \\
+\hline
+\multicolumn{1}{|l|}{$\alpha$} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.0} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.1} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.2} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.3} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.4} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.5} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.6} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.7} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{\textbf{0.8}} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\multicolumn{1}{|l|}{0.9} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\hline
+\end{tabular}
+\label{tab:Confronto_tempi}
+\caption{Tempo di esecuione di queste operazioni al variare dei fattori di caricamento.}
+\end{table}
+\end{center}
+
+
 \begin{Huge}
 TODO
 \end{Huge}
 \section{Conclusioni}
+In questa sezione dicuteremo dei risultati ottenuti mediante queste sperimentazioni.
 
 \subsection{Aderenza ai risultati teorici}
+Come hanno mostrato i grafici riportati in questo relazione si può evincere senza ragionevoli dubbi che i risultati teorici siano corrispondenti alla realtà. Infatti abbiamo notato in pressochè in tutti i grafici una somiglianza tra i dati ottenuti sperimentalmente e quelli teorici. Inoltre abbiamo visto come l'esplorazione lineare, data la presenza del clustering primario, risulta meno efficiente per fattori di caricamento della tabella significativi. Perciò possimo dire di aver confermato le seguenti nozioni teoriche:
+\begin{itemize}
+\item Che l'utilizzo di una dimensione della tabella pari ad un numero primo nell'esplorazione lineare e con doppio hash garantisce la generazione di una permutazione delle celle.
+\item Che è possibile utilizzare qualsiasi coefficiente per l'esplorazione lineare
+\item Che il costo di una ricerca, sia con successo che insuccesso, sia \bigO$(\frac{1}{1 - \alpha}$.
+\item Che l'esecuzione di una ricerca con successo è in media più efficiente di una con insuccesso.
+\item Che il costo di un inserimento è \bigO($\frac{1}{\alpha}log(\frac{1}{1 - \alpha}$).
+\item Che l'esplorazione linerare è meno efficiente rispetto alle altre per via del clustering primario.
+
+Detto ciò, bisogna aggiungere alcuni aspetti teorici che non erano noti all'inizio del laboratotrio, ma che sono stati chiarificati successivamente. Ovvero che per il corretto funzionamento di una tabella hash con esplorazione quadratica il coefficiente $\frac{1}{2}$ possono essere utilizzati solatanto con una dimensione della tabella che è una potenza esatta del 2.
+
+Invece, c'è un comportamento atteso dalla teorica che non si è manifestato durante i test. Infatti essendo l'esplorazione quadratica affetta da clustering secondario ci si attendeva che fosse meno efficiente dell'esplorazione con hash doppio. Questo effetto non si è manifestato in modo significativo, oppure non si è stato presente del tutto. Il motivo di questo è probabilmente da trovarsi nell'insieme dei numeri che vengono inseriti. Infatti sappiamo che l'utilizzo di una dimensione pari ad una potenza esatta del 2 non crea problemi di per sé. Ma dato che queste strategie di definizione del valore hash si basano sull'utilizzo dell'operatore modulo, utilizzando una potenza esatta del 2 non si fa altro che campionare i bit meno segnificative del valore preso in esame, e quindi in contesti in cui c'è una forte correlazione tra questi numeri perde fi efficienza. Esempi pratici sono delle parole in un testo o nomi di file dove è probabile che elementi molto differenti tra loro abbiano in comune la parte terminante (nel primo caso uno o più caratteri, nel scecondo l'estenzione del file). 
+\end{itemize}
 
 \subsection{Risultati pratici}
+In questa sezione si andranno enunciare quelle che sono state i riscontri di carattere partico su questi test.
 
+Una delle cose che si può notare è sicuramente come i tempi di escuzione delle operazioni nella tabella hash, per $\alpha < 0.8$ risultino molto bassi se messi a confronto con i valori valori di $\alpha$ diversi. Questo ci porta alla conclusione che l'indicazione pratica dell'utilizzo di tabelle hash con $\alpha \simeq 0.8$ sia corretta. Infatti questo valore garantisce ancora dei tempi di escuzione ragionevolemente bassi, e d'altra parte riduce lo spreco della memoria in quanto vengono lascate vuoto "solo" il 20\% delle celle, e quindi solo 1 byte su 5 viene sprecato in memoria.
 
-
-\newpage
+In conclusione finale non si può dire che questa struttura dati si avvicina alla suo corrispondente teorico, ovvero dodato di tempi di esecuzione costanti in qualsiasi condizione, ma resta una struttura dati adeguata in quei casi in cui di deve ottenere un buon compromesso tra l'utilizzo della memoria e i tempi di accesso hai dati.
 
 \newpage
 
 \listoffigures
 \listoftables
-%\printindex
 \end{document}
