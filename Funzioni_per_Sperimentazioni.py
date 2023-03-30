@@ -129,8 +129,7 @@ def search_test(hash: open_hash, type: search_test_type, iterations: int = 1, in
     times = []
     load_factors = []
 
-    #Inoltre qui si farà la ricerca di soli valori presenti.
-    not_inserted_elements = list(range(0, hash.M * 10))
+    not_inserted_elements = list(range(hash.M * 10))
 
     milestone = math.ceil(hash.M / 100 * percent)
     for i in range(hash.M):
@@ -285,8 +284,8 @@ def load_factor_experiments(hash: open_hash, a: float, iter: int, type: test_typ
     if(hash.load_factor() != 0):
         for i in hash.array:
             if(i != "NIL"):
-                not_inserted.remove(i)
-                inserted.append(i)
+                not_inserted.remove(int(i))
+                inserted.append(int(i))
     else:
         x = random.choice(not_inserted)
         hash.insert(x)

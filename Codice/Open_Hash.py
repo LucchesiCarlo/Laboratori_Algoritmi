@@ -21,7 +21,7 @@ class hash_type(IntEnum):
 
 class open_hash(object):
 
-    __elements: int = 0
+    elements: int = 0
 
     def __init__(self, length: int, type: hash_type, c1: float = 1.0, c2: float = 0.5):
         """
@@ -34,7 +34,7 @@ class open_hash(object):
         if (length <= 0):
             raise ValueError("La lunghezza di un Hash non può essere negativa.")
         
-        self.array = np.full(length, fill_value = "NIL")
+        self.array = np.full(length, fill_value = "NIL", dtype = np.dtype("U10"))
         
         self.hash_type = type
         self.__c1 = c1
@@ -61,8 +61,8 @@ class open_hash(object):
             if(self.array[key] == str(x)):
                 raise ValueError("Non è possibile inserie nello stessa tavola hash 2 valori uguali.")
             if(self.array[key] == "NIL" or self.array[key] == "DEL"):
-               self.array[key] = x
-               self.__elements += 1
+               self.array[key] = str(x)
+               self.elements += 1
                return
             if(i == self.M):
                 raise MemoryError("Impossibile aggiungere un nuovo elemento perchè la tabella è piena.")
@@ -78,7 +78,7 @@ class open_hash(object):
             key = self.__calculate_hash(x, i)
             i+= 1
             if(self.array[key] == str(x)):
-                return key
+                return int(key)
             if(i == self.M or self.array[key] == "NIL"):
                 return "NIL"
     #Questa funzione da come valore di ritorno True se l'elemento è stato trovato ed eliminato.
@@ -92,13 +92,13 @@ class open_hash(object):
 
             if(self.array[key] == str(x)):
                 self.array[key] = "DEL"
-                self.__elements -= 1
+                self.elements -= 1
                 return True
             if(self.M == i):
                 return False
             
     def load_factor(self):
-        return float(self.__elements) / self.M
+        return float(self.elements) / self.M
     
     def undo_element(self, x: int):
         """
@@ -111,10 +111,10 @@ class open_hash(object):
         i = 0
         while(True):
             key = self.__calculate_hash(x, i)
-            i+= 1
+            i += 1
             if(self.array[key] == str(x)):
                 self.array[key] = "NIL"
-                self.__elements -= 1
+                self.elements -= 1
                 return key
             if(i == self.M or self.array[key] == "NIL"):
                 return "NIL"
