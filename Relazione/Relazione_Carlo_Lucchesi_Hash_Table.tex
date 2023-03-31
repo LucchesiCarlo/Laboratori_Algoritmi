@@ -34,7 +34,7 @@
 	\caption{#3}
 }
 
-
+\newcommand{\newlineitem}[1]{\item \textbf{#1} \hfill \break}
 
 \thispagestyle{empty}
 
@@ -108,9 +108,9 @@ Per poter comprendere effettivamente a pieno i risultati, ed eventualemnte confr
 La piattaforma hardware utilizzata si tratta di un laptop: questo comporta una ridotta capacità di calcolo rispetto a calcolatori desktop o risorse di calcolo remoto (Ad esempio il \textbf{Cloud Computing}).
 Le specifiche hardware di interesse, ovvero quelle che hanno un impatto maggiore sui risultati ottenuti, sono:
 \begin{itemize}
-\item \textbf{CPU:} ARM A9 con frequenza massima pari a 3,6 GHz
+\item \textbf{CPU:} ARM A9 con frequenza massima pari a 3,6 GHz.
 \item \textbf{Scheda Madre:} AsusTek Computer INC X555BP, chipset AMD.
-\item \textbf{RAM:} 8GB DDR4-SDRAM
+\item \textbf{RAM:} 8GB DDR4-SDRAM.
 \item \textbf{GPU:} RADEON R5 M420 con 2GB di memoria.
 \item \textbf{Disco:} HDD da 1TB (Partizionato: l'ambiente software ha a disposizione solo 200 GB circa).
 \end{itemize} 
@@ -196,10 +196,254 @@ Dato che il clustering primario si verifica in molti più casi rispetto al secon
 \section{Documentazione del Codice}
 In questa sezione verrà mostarto parti essenziali del codice utilizzato durante tutti i test
 \subsection{Implementazione delle Strutture Dati}
+L'implementazione della tabell hash con indirizzamento aperto è stata fatta mediante una classe definita nel file \textbf{Open\_Hash.py} sotto la cartella \textbf{Codice}. Questa è descritta dai seguenti metodi:
+\begin{itemize}
+\item \textbf{\_\_init\_\_(self, length: int, type: hash\_type, c1: float = 1.0, c2: float = 0.5):}\break \hfill
+Questo è il costruttore della tabella hash, quindi si occupa di creare l'array in cui verranno inseriti gli elementi (all'inizio l'array conterrà tutti valori \emph{NIL}). Queste sono le descrizioni del significato degli attributi.
+\begin{itemize}
+\item \textbf{length: } la lunghezza della tabella hash.
+\item \textbf{type: } la tipologia di  esplorazione utilizzare (Lineare, Quaratica o con Doppio Hash).
+\item \textbf{c1: } il coefficiente utilizzato nell'esplorazione Lineare o il primo della esplorazione Quadratica.
+\item \textbf{c2: } il secondo coefficiente dell'esplorazione Quadratica.
+\end{itemize}
+\newlineitem{insert(self, x: int):}
+Questo è il metodo che permette di inserire l'elemento \textbf{x} all'interno della tabella hash. Questa si occuperà di chiamare la funzione hash in modo consono a come è stata instanziata la tabella hash quando è stata costruita.
+\newlineitem{search(self, x: int):}
+Questo metodo si occupa di cercare all'interno della tabella il valore \textbf{x}, e di dare come risultato la posizione di dove si trova nell'array se presente, \emph{NIL} altrimenti.
+\newlineitem{delete(self, x: int):}
+Questa funzione server per eleminare dalla tabella l'elemento \textbf{x} e sostituire al suo posto \emph{DEL}, oppuer se questo non è presente non fare nulla. Questa funzione dà come risultato \emph{True} se l'elemento è stato trovato ed eliminato, \emph{False} altrimenti.
+\newlineitem{load\_factor(self):}
+Questa funzione da come risultato il \emph{fattore di caricamento} della tabella.
 
+\newlineitem{undo\_element(self, x: int):}
+Questo metodo serve per rimuovere l'elemento \textbf{x} dalla tabella hash. Differentemente dal metodo delete questo sostituisce il valore usado la parola \emph{NIL}. Questo metodo può essere usato su un determinato valore solamente se quello è stato l'ultimo ad essere inserito (quello infatti è il significato di undo nella firma del metodo), e che se così non fosse si renderebbe inutilizzabile la tabella hash. Ritorna \emph{True} se l'elemnto viene rimosso, \emph{False} altrimenti.
 
+\newlineitem{\_\_calculate\_hash(self, x: int, i: int):}
+Questo metodo privato serve per calcolare \emph{i-esimo} elemento della sequenza di esplorazione dell'elemento \textbf{x}, usando le funzioni hash definite nel costruttore della tabella hash.
+\newlineitem{\_\_division\_probing(self, k: int):}
+Questo metodo privato calcola il risultato della funzione hash dell'argomento \textbf{k} usando il metodo delle divisioni.
+\newlineitem{\_\_linear\_probing(self, k:int , i: int):}
+Questo metodo privato calcola il risultato dell'\emph{i-esimo} elemento della sequenza di esplorazione associata al valore \textbf{k} usano il metodo lineare.
+\newlineitem{\_\_quadratic\_probing(self, k:int , i: int):}
+Questo metodo privato calcola il risultato dell'\emph{i-esimo} elemento della sequenza di esplorazione associata al valore \textbf{k} usano il metodo quadratico.
+\newlineitem{\_\_double\_probing(self, k:int , i: int):}
+Questo metodo privato calcola il risultato dell'\emph{i-esimo} elemento della sequenza di esplorazione associata al valore \textbf{k} usano il metodo con doppio hash.
+\end{itemize}
+
+Il tipo di esplorazione utilizzare sulla tabella hash viene definito nella enumerazione che permette tra solo scelte possibili: Lineare, Quadratico e Doppio.
 \subsection{Funzioni di supporto per la Sperimentazione}
+Invece, per quanto riguardano le funzioni che sono state utilizate per fare i test, queste si trovano all'interno di 3 file pricipali: \textbf{main.py}, \textbf{Funzioni\_per\_Sperimantazioni.py} e \textbf{Funzioni\_per\_Garfici}.
 
+\subsubsection{main.py}
+Dentro il file main.py si trova il codice che serve per poter eseguire tutti i test che sono stati commentati all'interno di questo documento. Questo al fine di rendere più semplice la gestione del software sono stati divisi in funzioni.
+
+\begin{itemize}
+\newlineitem{main():}
+Questa funzione si occupa di lanciare il programma che esegue i test. Questa richiede in ingresso un numero binario di 4 cifre, dove ogni cifra identifica il test che si vuole fare. Per esmpio impostare la 3° cifra a 1 farà si che il 3° test venga esguito, 0 il contratio. Se l'ingresso dovesse essere più piccolo di 4 cifre il programma si occuperà di aggiugere gli 0 a sinistra per completare il numero. Inserire il numero 0 fa terminare il programma senza eseguire nessun test. L'inseirmento di un numero in un formato diverso oppure troppo grande non verrà accettato e  quindi verrà richiesto di nuovo.
+\newlineitem{main\_test(m, iter, interval, verbose, save):}
+Questa funzione si occupa di gestire il codice per l'esecuzione dei test test principali, la generazione dei risultati salvati su file \emph{.txt}, la costruzione dei grafici ed ventualmente il loro salvataggio come immagini. I parametri che riceve hanno i seguenti significati
+\begin{itemize}
+\item \textbf{m:} la dimensione con cui creare le tabelle hash su cui fare i test. Notare che nel caso dell'hash quadratico verrà usata come dimensione il risultato della funzione \emph{closest\_two\_power(m)} .
+\item \textbf{iter:} il numero di volte che bisogna eseguire ogni misurazione.
+\item \textbf{interval:} ogni quanti elementi bisogna fare una misorazione.
+\item \textbf{verbose:} un valore booleano che indica se stampare sullo standard output lo stato dei test o meno.
+\item \textbf{save:} un valore booleano che indica se salvare o meno i grafici generati.
+\end{itemize}
+\newlineitem{test\_linear\_different\_coefficent(m: int, c\_1: int, c\_2: int, iter: int, interval: int, verbose: bool, test: test\_type, suffix: str = "")}
+Questa funzione viene utilizzata per eseguire il test di operazioni su una tabella hash ad esplorazione lineare con coefficienti diversi. Questa funzione ha poi il compito di generare dei file \emph{.txt} su cui salverà il risultati. I parametri da fornire hanno il seguente significato.
+\begin{itemize}
+\item \textbf{m:} la dimensione delle tabelle hash.
+\item \textbf{c\_1:} il coefficiente con cui istanziare la prima tabella hash.
+\item \textbf{c\_2:} il coefficiente con cui istanziare la seconda tabella hash.
+\item \textbf{iter:} quante volte ripetere le misuarzioni.
+\item \textbf{interval:} la distanza in numero di elementi tra una misuarzione e l'altra.
+\item \textbf{verbose:} un valore booleano che indica se stamapre su standard output lo stato attuale dei test.
+\item \textbf{test:} indica il tipo di test da eseguire, che può essere una ricerca con successo, con insuccesso oppure un inserimento.
+\item \textbf{suffix:} è una stringa che indica con che suffisso salvare i file \emph{.txt}. Serve per evitare di sovrascrivere dei file che ci potrebbero interessare.
+\end{itemize}
+\newlineitem{plot\_test\_linear\_different\_coefficent(c\_1: int, c\_2: int,save: bool, test: test\_type, suffix: str = ""):}
+Questa funzione serve per disegnare, ed eventualemente salvare i grafici generati da un test con coefficienti di esplorazione lineare diversi. Questi si occpuano di recuperare i dati da file \emph{.txt} opportunamente creati. I parametri hanno il seguente significato.
+\begin{itemize}
+\item \textbf{c\_1:} il coefficiente con cui era stata istanziata la prima tabella hash.
+\item \textbf{c\_2:} il coefficiente con cui era stata istanziata la seconda tabella hash.
+\item \textbf{save:} indica se salvare o meno i grafici.
+\item \textbf{test:} indica il tipo di test da eseguire, che può essere una ricerca con successo, con insuccesso oppure un inserimento.
+\item \textbf{suffix:} è una stringa che indica con che suffisso salvare i file \emph{.txt}. Serve per evitare di sovrascrivere dei file che ci potrebbero interessare.
+\end{itemize}
+
+\newlineitem{test\_different\_dimensions(m\_1: int, m\_2: int, iter: int, interval: int, verbose: bool, hash: hash\_type, test: test\_type, suffix: str = ""):}
+Questa funzione serve per eseguire i test con tabelle hash di dimensione differente. Questa, una volta fatte le misurazioni, scriverà i risultati su dei file \emph{.txt} opportunamente creati. I parametri hanno i seguenti significati.
+\begin{itemize}
+\item \textbf{m\_1:} la dimensione con cui istanziare la prima tabella hash.
+\item \textbf{m\_2:} la dimensione con cui istanziare la seconda tabella hash.
+\item \textbf{iter:} quante volte ripetere le misuarzioni.
+\item \textbf{interval:} la distanza in numero di elementi tra una misuarzione e l'altra.
+\item \textbf{verbose:} un valore booleano che indica se stamapre su standard output lo stato attuale dei test.
+\item \textbf{hash:} il tipo di esplorazione con cui creare le 2 tabelle.
+\item \textbf{test:} indica il tipo di test da eseguire, che può essere una ricerca con successo, con insuccesso oppure un inserimento.
+\item \textbf{suffix:} è una stringa che indica con che suffisso salvare i file \emph{.txt}. Serve per evitare di sovrascrivere dei file che ci potrebbero interessare.
+\end{itemize}
+\newlineitem{plot\_test\_different\_dimensions(m\_1: int, m\_2: int, save: bool, hash: hash\_type, test: test\_type, suffix: str = ""):}
+Questa funzione serve per generare i grafici di un test eseguito con tabelle hash di misure differenti, ed eventualmente savare il grafico. Quesat recupera i dati da un file \emph{.txt} opportunamente creato. I parametri hanno il seguente significato.
+\begin{itemize}
+\item \textbf{m\_1:} la dimensione con cui era stata istanziata la prima tabella hash.
+\item \textbf{m\_2:} la dimensione con cui era stata istanziata la seconda tabella hash.
+\item \textbf{save:} indica se salvare il grafico generato o meno.
+\item \textbf{hash:} il tipo di esplorazione con cui creare le 2 tabelle.
+\item \textbf{test:} indica il tipo di test da eseguire, che può essere una ricerca con successo, con insuccesso oppure un inserimento.
+\item \textbf{suffix:} è una stringa che indica con che suffisso salvare i file \emph{.txt}. Serve per evitare di sovrascrivere dei file che ci potrebbero interessare.
+\end{itemize}
+
+\newlineitem{test\_load\_factor(m: int, type: test\_type, iter: int, verbose: bool, suffix: str = ""):}
+Questa funzione serve per seguire il test sui fattori di caricamento multipli di 0.1. Questa, una volta ottenuti i risultati, li salva su di un file \emph{.txt}. I parametri hanno il seguente significato.
+
+\begin{itemize}
+\item \textbf{m:} la dimensione con creare le tabelle hash.
+\item \textbf{type:} il tipo di test da eseguire, che possono essere ricerche con successo, con insuccesso oppure inserimenti.
+\item \textbf{iter:} il numero di volte che deve essere eseguita una misurazione.
+\item \textbf{verbose:} un valore boleano che indica se mostrare o meno sullo standard output lo stato dei test.
+\item \textbf{suffix:} è una stringa che indica con che suffisso salvare i file \emph{.txt}. Serve per evitare di sovrascrivere dei file che ci potrebbero interessare.
+\end{itemize}
+\end{itemize}
+\subsubsection{Funzioni per Sperimentazioni}
+In questo file sono presenti le funzioni di supporto per l'esecuzione dei test. Il codice al suo interno è stato suddiviso in funzioni per semplificarne l'utilizzo.
+\begin{itemize}
+\newlineitem{execute\_test(m: int, m\_q: int, iter: int, interval: int, verbose: bool, type: test\_type, suffix: str = ""):}
+Questa funzione serve per eseguire i test di un particolare tipo di operazione su tutti e 3 i tipi di esplorazione. Questa funzione ritorna il tempo totale di esecuzione. I parametri hanno il seguente significato.
+\begin{itemize}
+\item \textbf{m:} la dimensione con cui creare le tabelle hash con esplorazione lineare ed hash doppio.
+\item \textbf{m\_q:} la dimensione con cui creare le tabelle hash con esplorazione quadratica.
+\item \textbf{iter:} il numero di volte che deve essere ripetuta una misurazione.
+\item \textbf{interval:} la distanza tra una iterazione e l'altra.
+\item \textbf{verbose:} indica se mostrare o meno lo stato attuale dei test.
+\item \textbf{type:} indica il tipo di test che deve essere eseguito.
+\item \textbf{suffix:} indica il suffisso con cui verranno salvati i file dei risultati.
+\end{itemize}
+Questa funzione non salva i risultati ottenuti, ma chiamando le funzioni search\_experiment o insert\_experiment saranno queste a creare i file \emph{.txt}.
+\newlineitem{process\_plots(save: bool, type: test\_type, suffix = ""):}
+Questa funzione serve per generare i grafici provenienti da un tipo specifico di test. Quindi recupera dai file \emph{.txt} i risultati e genera i singoli grafici, il grafico a confronto e il grafico a barre. I parametri hanno i seguenti significati.
+\begin{itemize}
+\item \textbf{save:} indica se salvare o meno i file.
+\item \textbf{type:} indica il tipo di operazione a cui appartegono i dati che si vogliono rappresentare.
+\item \textbf{suffix:} indica il suffisso che hanno i file che contengono i dati e con il quale eventualemnte salvare i grafici.
+\end{itemize} 
+
+\newlineitem{search\_test(hash: open\_hash, type: search\_test\_type, iterations: int = 1, interval:int= 1, verbose: bool = False, percent: float = 10):}
+Questa funzione esegue i test della ricerca su una particolare tabella hash. Questa funzione da come valori di ritorno 2 liste: la prima contiene i fattori di caricamento su cui sono state fatte le misurazioni, la seconda il risultati di queste. I parametri hanno questi significati.
+\begin{itemize}
+\item \textbf{hash:} la tabella hash su cui eseguire il test.
+\item \textbf{type:} il tipo di ricerca su cui si vuole fare il test.
+\item \textbf{iterations:} il numero di volte che deve essere ripetuta una misurazione.
+\item \textbf{interval:} la distanza tra una iterazione e l'altra.
+\item \textbf{verbose:} indica se mostrare o meno lo stato attuale dei test.
+\item \textbf{percent:} indica ogni quanto in percentuale aggiornare lo stato dei test.
+\end{itemize}
+
+\newlineitem{insert\_test(hash: open\_hash, iterations: int = 1, interval:int = 1, verbose: bool = False, percent: float = 10):}
+Questa funzione esegue i test di inserimento su una particolare tabella hash. Questa funzione da come valori di ritorno 2 liste: la prima contiene i fattori di caricamento su cui sono state fatte le misurazioni, la seconda il risultati di queste. I parametri hanno questi significati.
+\begin{itemize}
+\item \textbf{hash:} la tabella hash su cui eseguire il test.
+\item \textbf{iterations:} il numero di volte che deve essere ripetuta una misurazione.
+\item \textbf{interval:} la distanza tra una iterazione e l'altra.
+\item \textbf{verbose:} indica se mostrare o meno lo stato attuale dei test.
+\item \textbf{percent:} indica ogni quanto in percentuale aggiornare lo stato dei test.
+\end{itemize}
+
+\newlineitem{search\_experiments(m: int, m\_q: int, iter: int, interval: int, verbose: bool, type: search\_test\_type,  suffix = ""):}
+Questa funzione serve per eseguire i test di un tipo particolare di ricerca su tutti i tipi i esplorazione delle tabelle hash. Questa funzione si occupa di esguire i singoli test con le funzioni precedentemente descritte, e poi salvare sui dei file opportunamente creati i risultati. I parametri hanno il seguente significato.
+\begin{itemize}
+\item \textbf{m:} la dimensione con cui creare le tabelle hash con esplorazione lineare ed hash doppio.
+\item \textbf{m\_q:} la dimensione con cui creare le tabelle hash con esplorazione quadratica.
+\item \textbf{iter:} il numero di volte che deve essere ripetuta una misurazione.
+\item \textbf{interval:} la distanza tra una iterazione e l'altra.
+\item \textbf{verbose:} indica se mostrare o meno lo stato attuale dei test.
+\item \textbf{type:} indica il tipo di operazione di ricerca da eseguire come test.
+\item \textbf{suffix:} indica il suffisso con cui verranno salvati i file dei risultati.
+\end{itemize}
+
+\newlineitem{insert\_experiments(m: int, m\_q: int, iter: int, interval: int, verbose: bool,  suffix = ""):}
+Questa funzione serve per eseguire i test di inserimento su tutti i tipi i esplorazione delle tabelle hash. Questa funzione si occupa di esguire i singoli test con le funzioni precedentemente descritte, e poi salvare sui dei file opportunamente creati i risultati. I parametri hanno il seguente significato.
+\begin{itemize}
+\item \textbf{m:} la dimensione con cui creare le tabelle hash con esplorazione lineare ed hash doppio.
+\item \textbf{m\_q:} la dimensione con cui creare le tabelle hash con esplorazione quadratica.
+\item \textbf{iter:} il numero di volte che deve essere ripetuta una misurazione.
+\item \textbf{interval:} la distanza tra una iterazione e l'altra.
+\item \textbf{verbose:} indica se mostrare o meno lo stato attuale dei test.
+\item \textbf{suffix:} indica il suffisso con cui verranno salvati i file dei risultati.
+\end{itemize}
+\newlineitem{load\_factor\_experiments(hash: open\_hash, a: float, iter: int, type: test\_type):}
+Questa funzione esegue un test di una particolare operazione, su una tabella hash con un fattore di caricamento specifico. Questa funzione da come risultato il tempo ottenuto dalle misurazioni. I parametri hanno questi significati.
+\begin{itemize}
+\item \textbf{hash:} la tabella hash su cui eseguire il test.
+\item \textbf{a:} il fattore di caricamento su cui eseguire il test. Sarà la funzione ad occuparsi di riempire la tabella in modo da raggiungere un fattore di caricamento il più possibile vicino a quello impostato.
+\item \textbf{iter:} il numero di volte che deve essere ripetuta una misurazione.
+\item \textbf{type:} il tipo di operazione di cui si vuole misurare il tempo.
+\end{itemize}
+
+\newlineitem{save\_on\_file(x, y, file\_name: str):}
+Questa funzione si occupa di creare un file con il nome \textbf{file\_name} e di inserirci i valori delle liste \textbf{x} e \textbf{y}. Questo file si trova sotto la cartella \textbf{Risultati}.
+\newlineitem{load\_from\_file(file\_name: str):}
+Complementare alla precedente sevre per estrapolare i valori delle liste salvate nel file di nome \textbf{file\_name} creato dalla funzione \emph{save\_on\_file}. Quesat funzione parte dal presupposto che il file da leggere si trovi sollo la carteòòa \textbf{Risultati}. Ritorna 2 liste: la lista \textbf{x} e la lista \textbf{y} contenute nel file.
+\newlineitem{closest\_two\_power(x: int):}
+Questa funzione da come valore di ritorno la potenza esatta del 2 più vicina all'argomento \textbf{x}
+\newlineitem{get\_prefix\_name(type: test\_type):}
+Fornito il tipo di test da eseguire, ne ritorna il nome come stringa.
+\newlineitem{get\_exploration\_name(type: hash\_type):}
+Fornito il tipo di esplorazione usata, ne ritorna il nome come stringa.
+\newlineitem{get\_title\_name(type: test\_type):}
+Fornito il tipo di test da eseguire, ne ritorna il titolo da usare nei grafici come stringa.
+\end{itemize}
+\textbf{Notare bene:}tutti quei casi in cui si fa riferimento all'utilizzo del parametro iter (o iteration) le misurazioni finali ottenute sono la media di quelle eseguite \emph{iter} volte.
+
+\subsubsection{Funzioni per Grafici}
+In questo file è contenuto il codice utilizzato per la genrazione, ed eventualmente il savlataggio, dei grafici conteneti i isultati dei nostri test. \'E stato suddiviso in funzioni per una questione facilitarne la gestione.
+\begin{itemize}
+\newlineitem{create\_function\_plot(x, y, title: str, label: str, color: str, save: bool, file\_name: str = "", annotate: bool = True, is\_log: bool = True):}
+Questa funzione serve per generare un grafico a partire dai valori dei punti da disegnare. I parametri hanno il seguente significato.
+\begin{itemize}
+\item \textbf{x:} il valore delle ascisse dei punti da disegnare.
+\item \textbf{y:} il valore delle ordinate dei punti da disegnare.
+\item \textbf{title:} il titolo da dare ap grafico.
+\item \textbf{label:} l'etichetta da associare alla curva.
+\item \textbf{color:} indica il colore con cui deve essere sigegnata la funzione.
+\item \textbf{save:} indica se salvare o meno il grafico.
+\item \textbf{annotate:} indica se annotare il valore vicino al punto con ascissa più grande.
+\item \textbf{file\_name:} indica il nome con cui salvare il file.
+\item \textbf{isLog:} indica se mettere la scala delle ascisse logaritmica o meno.
+\end{itemize}
+
+\newlineitem{create\_multiple\_function\_plot(x\_values, y\_values, title: str, save: bool, file\_name: str = "", is\_log: bool = True):}
+Questa funzione serve per disegnare su di un grafico più funzioni differenti. I parametri hanno i segnenti significati.
+\begin{itemize}
+\item \textbf{x\_values:} è una lista, che contiene le liste delle ascisse delle fari funzioni.
+\item \textbf{y\_values:} è una lista così definita.
+\begin{enumerate}
+\item Il primo elemnto di ogni lista è la lista dei valori delle ordinate dei punti.
+\item Il secondo valore indica il colore con cui disegnare il grafico.
+\item Il terzo valore indica l'etichetta che deve essere associata ad un particolare grafico.
+\end{enumerate}
+\item \textbf{title:} il titolo da dare ap grafico.
+\item \textbf{save:} indica se salvare o meno il grafico.
+\item \textbf{file\_name:} indica il nome con cui salvare il file.
+\item \textbf{isLog:} indica se mettere la scala delle ascisse logaritmica o meno.
+\end{itemize}
+\newlineitem{create\_bar\_plot(x\_values, y\_values, title: str, width: float, save: bool = False, file\_name: str = "", indexes = [i/10 for i in range(10)], is\_log: bool = True):}
+Questa funzione riceve in ingresso un insieme di valori che poi utilizza per creare un grafico a barre. I parametri hanno questi significati.
+\begin{itemize}
+\item \textbf{x\_values:} è una lista, che contiene le liste delle ascisse delle fari funzioni.
+\item \textbf{y\_values:} è una lista così definita.
+\begin{enumerate}
+\item Il primo elemnto di ogni lista è la lista dei valori delle ordinate dei punti.
+\item Il secondo valore indica il colore con cui disegnare il grafico.
+\item Il terzo valore indica l'etichetta che deve essere associata ad un particolare grafico.
+\end{enumerate}
+\item \textbf{witdh:} la larghezza delle barre nel grafico.
+\item \textbf{save:} indica se salvare o meno il grafico.
+\item \textbf{file\_name:} indica il nome con cui salvare il file.
+\item \textbf{indexes:} i valori dell'ascissa su cui posizionare le barre.
+\item \textbf{isLog:} indica se mettere la scala delle ascisse logaritmica o meno.
+\end{itemize}
+\end{itemize}
 \section{Risultati Sperimentali}
 
 \subsection{Configurazione Preliminare}

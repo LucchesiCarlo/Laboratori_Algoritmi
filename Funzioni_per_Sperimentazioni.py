@@ -17,7 +17,7 @@ class test_type(IntEnum):
     Fail = 2
     Insert = 3
 
-def execute_test(m, m_q, iter, interval, verbose, type, suffix = ""):
+def execute_test(m: int, m_q: int, iter: int, interval: int, verbose: bool, type: test_type, suffix: str = ""):
     total_time = 0
     
     if(type == test_type.Success):
@@ -29,7 +29,7 @@ def execute_test(m, m_q, iter, interval, verbose, type, suffix = ""):
 
     return total_time
 
-def process_plots(save, type, suffix = ""):
+def process_plots(save: bool, type: test_type, suffix = ""):
     
     test_prefix = ""
 
@@ -213,7 +213,7 @@ def insert_test(hash: open_hash, iterations: int = 1, interval:int = 1, verbose:
 
     return (load_factors, times)
 
-def search_experiments(m, m_q, iter, interval, verbose, type: search_test_type,  suffix = ""):
+def search_experiments(m: int, m_q: int, iter: int, interval: int, verbose: bool, type: search_test_type,  suffix = ""):
     prefix = ""
 
     if(type == search_test_type.Success):
@@ -249,7 +249,7 @@ def search_experiments(m, m_q, iter, interval, verbose, type: search_test_type, 
 
     return end - start
 
-def insert_experiments(m, m_q, iter, interval, verbose,  suffix = ""):
+def insert_experiments(m: int, m_q: int, iter: int, interval: int, verbose: bool,  suffix = ""):
     start = timer()
 
     hashLinear = open_hash(m, hash_type.Linear)
@@ -276,7 +276,7 @@ def insert_experiments(m, m_q, iter, interval, verbose,  suffix = ""):
 
     return end - start
 
-def load_factor_experiments(hash: open_hash, a: float, iter: int, type: test_type, suffix: str = ""):
+def load_factor_experiments(hash: open_hash, a: float, iter: int, type: test_type):
 
     not_inserted = list(range(10 * hash.M))
     inserted = []
@@ -321,13 +321,13 @@ def load_factor_experiments(hash: open_hash, a: float, iter: int, type: test_typ
 
     return (time / iter) * 1000
 
-def save_on_file(x, y, file_name):
+def save_on_file(x, y, file_name: str):
     file = open("Risultati/" + file_name, "w")
     file.write("x = " + str(x) + "\n")
     file.write("y = " + str(y) + "\n")
     file.close()
 
-def load_from_file(file_name):
+def load_from_file(file_name: str):
     
     coordinates = {
         "x" : [],
@@ -366,7 +366,7 @@ def closest_two_power(x: int):
     return res
 
 
-def get_prefix_name(type: test_type) -> str:
+def get_prefix_name(type: test_type):
     prefix_name = ""
 
     if(type == test_type.Success):
@@ -378,7 +378,7 @@ def get_prefix_name(type: test_type) -> str:
     return prefix_name
 
 
-def get_exploration_name(type: hash_type) -> str:
+def get_exploration_name(type: hash_type):
     exploration_name = ""
 
     if(type == hash_type.Linear):
@@ -389,7 +389,7 @@ def get_exploration_name(type: hash_type) -> str:
         exploration_name = "Doppio"
     return exploration_name
 
-def get_title_name(type: test_type) -> str:
+def get_title_name(type: test_type):
     title_name = ""
 
     if(type == test_type.Success):

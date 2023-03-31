@@ -2,22 +2,22 @@ import math
 from matplotlib import pyplot as plt
 from matplotlib.ticker import FormatStrFormatter
 
-def create_function_plot(x, y, title, label, color, save, file_name = "", annotate = True, isLog = True, x_name: str = "Fattore di Caricamento"):
-    setup_plot(x_name, "Tempo (ms)", title, isLog)
+def create_function_plot(x, y, title: str, label: str, color: str, save: bool, file_name: str = "", annotate: bool = True, is_log: bool = True):
+    setup_plot("Fattore di Caricamento", "Tempo (ms)", title, is_log)
     plt.plot(x, y, color = color, marker = "o", markersize = 2, label = label)
     if(annotate):
         plt.annotate(text = "%.2f" % (y[-1]), xy = (x[-1], y[-1]), xytext=(x[-1] * 0.9, y[-1] * 0.8))
     generate_plot(save, file_name)
 
-def create_multiple_function_plot(x_values, y_values, title, save, file_name = "", isLog = True, x_name: str = "Fattore di Caricamento"):
-    setup_plot(x_name, "Tempo (ms)", title, isLog)
+def create_multiple_function_plot(x_values, y_values, title: str, save: bool, file_name: str = "", is_log: bool = True):
+    setup_plot("Fattore di Caricamento", "Tempo (ms)", title, is_log)
     for i in range(len(y_values)):
         x ,y = x_values[i], y_values[i][0]
         plt.plot(x, y, color = y_values[i][2], marker = "o", markersize = 2, label = y_values[i][1])
     generate_plot(save, file_name)
 
-def create_bar_plot(x_values, y_values, title, width, save = False, file_name = "", indexes = [i/10 for i in range(10)],isLog = True):
-    setup_plot("Raggruppamenti fattore di Caricamento", "Tempo raggruppato", title, isLog)
+def create_bar_plot(x_values, y_values, title: str, width: float, save: bool = False, file_name: str = "", indexes = [i/10 for i in range(10)], is_log: bool = True):
+    setup_plot("Raggruppamenti fattore di Caricamento", "Tempo raggruppato", title, is_log)
     for i in range(len(y_values)):
         average = generate_bar_values(x_values[i], y_values[i][0])
         num_values = len(average)
@@ -47,14 +47,14 @@ def generate_bar_values(x, y):
 
     return average
 
-def setup_plot(xlabel , ylabel, title, isLog: bool = True):
+def setup_plot(xlabel , ylabel, title, is_log: bool = True):
     plt.figure()
     ax = plt.gca()
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
     plt.grid(True)
-    if(isLog):
+    if(is_log):
         plt.yscale("log")
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 

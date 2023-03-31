@@ -115,9 +115,9 @@ class open_hash(object):
             if(self.array[key] == str(x)):
                 self.array[key] = "NIL"
                 self.elements -= 1
-                return key
+                return True
             if(i == self.M or self.array[key] == "NIL"):
-                return "NIL"
+                return False
 
     #Questo metodo serve per raggruppare il codice che identifica la funzione hash da usare
     def __calculate_hash(self, x: int, i: int) -> int:

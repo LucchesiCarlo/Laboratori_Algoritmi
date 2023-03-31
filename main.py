@@ -165,7 +165,7 @@ def test_load_factor(m: int, type: test_type, iter: int, verbose: bool, suffix: 
 
     file.close()
 
-if (__name__ == "__main__"):
+def main():
     #Si è scelto il numero primo 24571 in quanto è un numero di considerevoli dimensioni, e si 
     # trova in un punto mediano circa tra i 2 numeri primi 16384 e 32768.
 
@@ -231,3 +231,7 @@ if (__name__ == "__main__"):
         print("==================================================")
 
     plt.show()
+
+
+if (__name__ == "__main__"):
+    main()
