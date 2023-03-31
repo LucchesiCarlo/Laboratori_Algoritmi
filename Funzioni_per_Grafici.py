@@ -47,7 +47,7 @@ def generate_bar_values(x, y):
 
     return average
 
-def setup_plot(xlabel , ylabel, title, is_log: bool = True):
+def setup_plot(xlabel: str, ylabel: str, title: str, is_log: bool = True):
     plt.figure()
     ax = plt.gca()
     plt.xlabel(xlabel)
@@ -58,7 +58,7 @@ def setup_plot(xlabel , ylabel, title, is_log: bool = True):
         plt.yscale("log")
     ax.yaxis.set_major_formatter(FormatStrFormatter('%.2f'))
 
-def generate_plot(save: bool = False, file_name = "Plot"):
+def generate_plot(save: bool = False, file_name: str = "Plot"):
     plt.legend(loc = 'upper left')
     if(save):
         plt.savefig("./Relazione/Immagini/" + file_name + ".png")

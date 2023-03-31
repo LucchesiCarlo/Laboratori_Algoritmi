@@ -443,7 +443,23 @@ Questa funzione riceve in ingresso un insieme di valori che poi utilizza per cre
 \item \textbf{indexes:} i valori dell'ascissa su cui posizionare le barre.
 \item \textbf{isLog:} indica se mettere la scala delle ascisse logaritmica o meno.
 \end{itemize}
+\newlineitem{generate\_bar\_values(x, y):}
+Questa funzione, ricevuta un lista \textbf{x} che contiene i valori delle ascisse e \textbf{y} valori delle ordinate, genera i ragguramenti utiliper generare i grafici a barre utilizzati nella relazione.
+\newlineitem{setup\_plot(xlabel: str, ylabel: str, title: str, is\_log: bool = True):}
+Quesat funzione serve per inizializzare un grafico con delle caratteristiche definite dai parametri che gli vengono forniti.
+\begin{itemize}
+\item \textbf{xlabel:} l'etichetta che indica il significato dei valori delle ascisse.
+\item \textbf{ylabel:} l'etichetta che indica il significato dei valori delle ordinate.
+\item \textbf{title:} il titolo del grafico.
+\item \textbf{is\_log:} un valore booleano che indica se il grafico deve essere rappresentato con l'asse delle ordinate in scala logaritmica.
 \end{itemize}
+
+\newlineitem{generate\_plot(save: bool = False, file\_name: str = "Plot"):}
+Questa funzione server per generare il grafico. Il parametro \textbf{save} indica se salvare o meno il grafico così generato, mentre \textbf{file\_name} serve per indicare il nome con cui savalre eventualmente il file.
+\end{itemize}
+
+\subsubsection{Altro codice}
+Per quanto siano presenti altri file conteneti del codice effettivamente utilizzato, questo non viene riportato nella documentazione in quanto del tutto superfluo per la riuscita dei test.
 \section{Risultati Sperimentali}
 
 \subsection{Configurazione Preliminare}
