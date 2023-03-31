@@ -17,3 +17,6 @@ Risultati/
 *.pyc
 .ipynb_checkpoints/
 __pycache__/
+appo.py
+Relazione/Relazione_Carlo_Lucchesi_Hash_Table.bbl
+Relazione/Relazione_Carlo_Lucchesi_Hash_Table.blg
