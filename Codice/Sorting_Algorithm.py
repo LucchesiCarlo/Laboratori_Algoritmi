@@ -26,7 +26,7 @@ def autonomus_counting_sort(A, B):
     minimum = min(A)
     maximum = max(A)
     k = maximum - minimum
-    C = np.zeros(k + 1, dtype = np.integer)
+    C = np.zeros(k + 1, dtype = np.int32)
     for i in range(length):
         C[A[i] - minimum] += 1
     for i in range(k):
@@ -43,7 +43,7 @@ def standard_counting_sort(A, B, k):
      -k numero massimo di presente nell'array A 
     """
     length = A.size
-    C = np.zeros(k + 1, dtype = np.integer)
+    C = np.zeros(k + 1, dtype = np.int32)
     for i in range(length):
         C[A[i]] += 1
     for i in range(k):
