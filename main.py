@@ -159,6 +159,7 @@ def test_load_factor(m: int, type: test_type, iter: int, verbose: bool, suffix: 
     file = open("Risultati/" + prefix + "_Fattori_Caricamento" + suffix + ".txt", "w")
 
     for i in range(11):
+        file.write("%.02f) => " % (i/10))
         for j in range(3):
             file.write(str(times[i][j]) + ", ")
         file.write("\n")
@@ -199,7 +200,7 @@ def main():
     m_1 = 24571
     m_2 = 16381
     iter = 1000
-    iter_2 = 2000
+    iter_2 = 1000
     interval = 250
     verbose = True
     save = True
@@ -221,13 +222,13 @@ def main():
 
     if(test_list[3] == 1):
         print_formatted("Test sui fattori di caricamento Successo", color.Blue)
-        test_load_factor(m_1, test_type.Success, verbose, iter_2)
+        test_load_factor(m_1, test_type.Success, iter_2, verbose)
         print("==================================================")
         print_formatted("Test sui fattori di caricamento Insuccesso", color.Blue)
-        test_load_factor(m_1, test_type.Fail, verbose, iter_2)
+        test_load_factor(m_1, test_type.Fail, iter_2, verbose)
         print("==================================================")
         print_formatted("Test sui fattori di caricamento Inserimento", color.Blue)
-        test_load_factor(m_1, test_type.Insert, verbose, iter_2)
+        test_load_factor(m_1, test_type.Insert, iter_2, verbose)
         print("==================================================")
 
     plt.show()
