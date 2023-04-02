@@ -230,7 +230,17 @@ Questo metodo privato calcola il risultato dell'\emph{i-esimo} elemento della se
 Questo metodo privato calcola il risultato dell'\emph{i-esimo} elemento della sequenza di esplorazione associata al valore \textbf{k} usano il metodo con doppio hash.
 \end{itemize}
 
+\begin{figure}[H]
+\image[0.40]{Class_UML}{Rappresentazione UML della classe open\_hash.}
+\label{fig:Class_UML}
+\end{figure}
+
+La figura \ref{fig:Class_UML} mostra in modo sintetico l'insieme dei campi della classe \textbf{open\_hash}, implementata nel file \textbf{Open\_Hash.py}.
+
 Il tipo di esplorazione utilizzare sulla tabella hash viene definito nella enumerazione che permette tra solo scelte possibili: Lineare, Quadratico e Doppio.
+
+Si è scelto di implementare questa tabella hash utilizzando array provenienti dalla libreria numpy. Questa deriva dal fatto l'implementazione degli \emph{array/liste} potesse condizionare in modo negativo l'andamento dei test.
+
 \subsection{Funzioni di supporto per la Sperimentazione}
 Invece, per quanto riguardano le funzioni che sono state utilizate per fare i test, queste si trovano all'interno di 3 file pricipali: \textbf{main.py}, \textbf{Funzioni\_per\_Sperimantazioni.py} e \textbf{Funzioni\_per\_Garfici}.
 
@@ -458,6 +468,12 @@ Quesat funzione serve per inizializzare un grafico con delle caratteristiche def
 Questa funzione server per generare il grafico. Il parametro \textbf{save} indica se salvare o meno il grafico così generato, mentre \textbf{file\_name} serve per indicare il nome con cui savalre eventualmente il file.
 \end{itemize}
 
+\begin{figure}[H]
+\image[0.75]{File_UML}{Rappresentazione della relazione tra i vari file.}
+\label{fig:File_UML}
+\end{figure}
+
+Nella immagine \ref{fig:File_UML} si può notare come il codice della classe \textbf{main.py} sia dipendende da le funzioni presenti dei file \textbf{Funzioni\_per\_Sperimentazioni.py} e \textbf{Funzioni\_per\_Grafici.py}\footnote{Il software per il disegno dello schem anon permetteva di riportare le funzioni implementate, e quindi per sapere quale siano fare riferimento alla documentazione presente in questa relazione.}.
 \subsubsection{Altro codice}
 Per quanto siano presenti altri file conteneti del codice effettivamente utilizzato, questo non viene riportato nella documentazione in quanto del tutto superfluo per la riuscita dei test.
 \section{Risultati Sperimentali}
