@@ -657,43 +657,46 @@ Come riportato in figura \ref{fig:Confronto_coefficienti} possiamo notare che so
 
 \begin{center}
 \begin{table}[H]
-\begin{tabular}{l|l|l|l|l|l|l|l|l|l|}
+\begin{tabular}{c|c|c|c||c|c|c||c|c|c|}
 %\hline
 \cline{2-10}
-& \multicolumn{3}{c|}{Successo} & \multicolumn{3}{c|}{Insuccesso} & \multicolumn{3}{c|}{Inserimento} \\
+& \multicolumn{3}{c||}{Successo} & \multicolumn{3}{c||}{Insuccesso} & \multicolumn{3}{c|}{Inserimento} \\
 \hline
 \multicolumn{1}{|l|}{$\alpha$} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
 \hline
-\multicolumn{1}{|l|}{0.0} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{\emph{0.0}} & 0.0029 & 0.0035 & 0.0045 & 0.0039 & 0.0045 & 0.0040 & 0.0047 & 0.0051 & 0.0054 \\
 \hline
-\multicolumn{1}{|l|}{0.1} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.1} & 0.0026 & 0.0029 & 0.0029 & 0.0031 & 0.0036 & 0.0034 & 0.0041 & 0.0046 & 0.0043 \\
 \hline
-\multicolumn{1}{|l|}{0.2} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.2} & 0.0025 & 0.0031 & 0.0031 & 0.0036 & 0.0038 & 0.0038 & 0.0045 & 0.0047 & 0.0050 \\
 \hline
-\multicolumn{1}{|l|}{0.3} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.3} & 0.0027 & 0.0031 & 0.0031 & 0.0039 & 0.0048 & 0.0046 & 0.0048 & 0.0055 & 0.0052 \\
 \hline
-\multicolumn{1}{|l|}{0.4} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.4} & 0.0029 & 0.0034 & 0.0037 & 0.0047 & 0.0051 & 0.0051 & 0.0058 & 0.0061 & 0.0059 \\
 \hline
-\multicolumn{1}{|l|}{0.5} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.5} & 0.0035 & 0.0037 & 0.0037 & 0.0058 & 0.0067 & 0.0062 & 0.0074 & 0.0075 & 0.0069 \\
 \hline
-\multicolumn{1}{|l|}{0.6} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.6} & 0.0037 & 0.0045 & 0.0043 & 0.0074 & 0.0082 & 0.0072 & 0.0092 & 0.0091 & 0.0090 \\
 \hline
-\multicolumn{1}{|l|}{0.7} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.7} & 0.0047 & 0.0051 & 0.0048 & 0.0132 & 0.0102 & 0.0090 & 0.0140 & 0.0131 & 0.0113 \\
 \hline
-\multicolumn{1}{|l|}{\textbf{0.8}} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{\textbf{0.8}} & 0.0067 & 0.0059 & 0.0053 & 0.02836 & 0.0163 & 0.0137 & 0.0307 & 0.0176 & 0.0164 \\
 \hline
-\multicolumn{1}{|l|}{0.9} & Lineare & Quadratico & Doppio & Lineare & Quadratico & Doppio  & Lineare & Quadratico & Doppio \\
+\multicolumn{1}{|l|}{0.9} & 0.0110 & 0.0080 & 0.0066 & 0.0887 & 0.0314 & 0.0261 & 0.1411 & 0.0352 & 0.0318 \\
+\hline
+\multicolumn{1}{|l|}{1.0} & 0.1080 & 0.0177 & 0.0197 & 55.21 & 43.55 & 64.76 & 32.25 & 23.75 & 36.51 \\
 \hline
 \end{tabular}
+\caption{Tempo di esecuzione (in $ms$) di queste operazioni al variare dei fattori di caricamento.}
 \label{tab:Confronto_tempi}
-\caption{Tempo di esecuione di queste operazioni al variare dei fattori di caricamento.}
 \end{table}
 \end{center}
 
+Come riportato dalla tabella \ref{tab:Confronto_tempi} possiamo vedere in termini di assoluti le differenze tra questi tipi di esplorazione. Innanzi tutto sono da considerarsi poco attendibili i risultati della tabella con $\alpha \simeq 0.0$, in quanto si può notare come siano leggermente maggiori dei successivi, cosa che non averebbe molto senso. Questo fenomeno può essere speigato in quanto è possibile che il computer eseguendo quel codice non sia ancora riuscito a mettere in atto tutti i processi di ottimizzazione, che possono invece essere stati attuai prima degli altri casi. Inoltre sono evidenziat i costi per $\alpha \simeq 0.8$ data l'importanza pratica che questo valore rappresenta negli utilizi pratici.
 
-\begin{Huge}
-TODO
-\end{Huge}
+Un'altra cosa che si può notare è come in media l'esplorazione con hash doppio sia più efficiente di quella quadratica (come abbiamo già detto visto con i grafici), ma in questo caso è possibile apprezzare maggiormente questa caratteristica.
+
+Inoltre un dato che si può evincere è che l'hash table, con qualsiasi tipo di esplorazione si utilizzi e a qualsiasi $\alpha$, privilegi nettamente le ricerche piuttosto che le altre operazioni. Mentre, per motivi difficili da capire, l'inserimento sembra essere leggermente sfavorito rispetto alla ricerca con insuccesso, tranne che per $\alpha \simeq 1.0$. 
 \section{Conclusioni}
 In questa sezione dicuteremo dei risultati ottenuti mediante queste sperimentazioni.
 
